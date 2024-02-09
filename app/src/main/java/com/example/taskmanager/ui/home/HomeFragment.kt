@@ -34,12 +34,10 @@ class HomeFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        recyclerView.adapter = HomeAdapter(arrayListOf())
+        homeViewModel.tasks.observe(viewLifecycleOwner){
+            recyclerView.adapter = HomeAdapter(it)
+        }
 
-//        val textView: TextView = binding.textHome
-//        homeViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
         return root
     }
 
