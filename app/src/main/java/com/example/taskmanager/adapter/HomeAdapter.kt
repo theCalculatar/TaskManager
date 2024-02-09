@@ -73,8 +73,6 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
                 it.max = overallDays.toInt()
             }
         }
-
-
     }
     override fun getItemCount() =  tasks.size
 
