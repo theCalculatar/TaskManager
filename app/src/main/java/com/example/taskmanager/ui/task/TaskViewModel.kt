@@ -15,9 +15,9 @@ class TaskViewModel():ViewModel() {
     fun getTodo(taskId: Long): LiveData<ArrayList<TodoModel>> {
         val todos = MutableLiveData<ArrayList<TodoModel>>()
         todos.postValue(arrayListOf(
-            TodoModel(2L,"Lee","this is the" +
+            TodoModel(2L,"Go to a meeting","this is the" +
                     "\n description is kind long lol\n lool",true,"02/02/2024",),
-            TodoModel(2L,"Lee","this is the description",true,"02/02/2024",),
+            TodoModel(2L,"Finish Project task manager","this is the description",true,"02/02/2024",),
             TodoModel(2L,"Lee","this is the description",false,"02/02/2024",),
             ))
         return todos
@@ -25,6 +25,10 @@ class TaskViewModel():ViewModel() {
 
     fun todoChanged(todoId: Long, complete: Boolean) {
 
+    }
+
+    fun getTask(taskId: Long): Any {
+        TODO("Not yet implemented")
     }
 
 

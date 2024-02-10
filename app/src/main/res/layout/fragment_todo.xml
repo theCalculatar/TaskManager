@@ -3,16 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="@dimen/activity_vertical_margin">
+    android:padding="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_task"
+        android:text="@string/add_todo"
         android:textStyle="bold"
         android:textSize="21sp"
         android:layout_gravity="center_horizontal"
-
         />
     <View
         android:layout_width="match_parent"
@@ -31,21 +30,22 @@
         android:autofillHints=""
         android:hint="@string/title"
         android:backgroundTint="@color/grey"
-        android:inputType="textMultiLine" />
+        android:imeOptions="actionNext"
+        android:inputType="text" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:id="@+id/description"
-        android:backgroundTint="@color/grey"
         android:background="@drawable/rectangle_18dp"
+        android:id="@+id/description"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:paddingStart="@dimen/activity_vertical_margin"
         android:paddingEnd="@dimen/activity_vertical_margin"
-        android:autofillHints="text"
+        android:imeOptions="actionDone"
+        android:autofillHints=""
         android:hint="@string/description"
-        android:inputType="textMultiLine"
-        />
+        android:backgroundTint="@color/grey"
+        android:inputType="text" />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -66,17 +66,38 @@
 
 
     </FrameLayout>
-    <TextView
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:id="@+id/create_task"
-        android:background="@drawable/rectangle_18dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:paddingStart="@dimen/activity_vertical_margin"
+        android:paddingEnd="@dimen/activity_vertical_margin"
         android:backgroundTint="@color/blue"
-        android:text="Create Task"
-        android:textSize="16sp"
-        android:textColor="@color/white"
-        android:gravity="center"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        android:background="@drawable/rectangle_18dp"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:id="@+id/alert"
+            android:src="@drawable/ic_home_black_24dp"
+            android:textSize="16sp"
+            app:tint="@color/white"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/white"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:id="@+id/save"
+            android:text="@string/save"
+            android:textSize="16sp"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/white"
+            android:gravity="center"/>
+
+    </RelativeLayout>
 
 
 </LinearLayout>

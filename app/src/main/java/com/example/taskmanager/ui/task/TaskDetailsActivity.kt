@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,11 @@ class TaskDetailsActivity : AppCompatActivity() {
         //
         todoRecycler.layoutManager = LinearLayoutManager(this)
 
+        addTodo.setOnClickListener {
+            val todoFragment = TodoFragment()
+            todoFragment.arguments = bundleOf("taskId" to taskId)
+            todoFragment.show(supportFragmentManager,TodoFragment.TAG)
+        }
 //        title.afterTextChange(){
 //
 //        }
