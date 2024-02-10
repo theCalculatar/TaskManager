@@ -3,4 +3,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
+    <string name="new_task">New Task</string>
+    <string name="non_empty_field">Field cannot be empty</string>
+    <string name="fill_all_required_fields">Fill all required fields</string>
+    <string name="set_deadline" >Set Task Deadline</string>
+    <string name="to_do">To-Do</string>
 </resources>

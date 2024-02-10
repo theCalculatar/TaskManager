@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_vertical_margin">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_task"
+        android:textStyle="bold"
+        android:textSize="21sp"
+        android:layout_gravity="center_horizontal"
+
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@color/grey"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/rectangle_18dp"
+        android:id="@+id/title"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:paddingStart="@dimen/activity_vertical_margin"
+        android:paddingEnd="@dimen/activity_vertical_margin"
+        android:autofillHints=""
+        android:hint="@string/title"
+        android:backgroundTint="@color/grey"
+        android:inputType="textMultiLine" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:id="@+id/description"
+        android:backgroundTint="@color/grey"
+        android:background="@drawable/rectangle_18dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:paddingStart="@dimen/activity_vertical_margin"
+        android:paddingEnd="@dimen/activity_vertical_margin"
+        android:autofillHints="text"
+        android:hint="@string/description"
+        android:inputType="textMultiLine"
+        />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:backgroundTint="@color/grey"
+        android:background="@drawable/rectangle_18dp"
+        >
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingStart="@dimen/layout_vertical_margin"
+            android:paddingEnd="@dimen/layout_vertical_margin"
+            android:layout_gravity="center"
+            android:id="@+id/task_spinner"
+            android:spinnerMode="dropdown"
+
+            />
+
+
+    </FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:id="@+id/create_task"
+
+        android:background="@drawable/rectangle_18dp"
+        android:backgroundTint="@color/teal_200"
+        android:text="Create Task"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+
+</LinearLayout>

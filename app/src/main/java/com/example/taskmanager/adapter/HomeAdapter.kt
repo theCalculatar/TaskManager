@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+    var onclick: ((Long) -> Unit)? = null
+
     private lateinit var context:Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_task_layout,parent,false)
@@ -78,13 +80,18 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
 
     //View holder for cards
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+
         val title:TextView = itemView.findViewById(R.id.title)
         val description:TextView = itemView.findViewById(R.id.description)
         val priorityLayout:View = itemView.findViewById(R.id.priority_layout)
         val days:TextView = itemView.findViewById(R.id.number_days)
         val daysLeft:TextView = itemView.findViewById(R.id.days_remaining)
         val progress:ProgressBar = itemView.findViewById(R.id.progressBar)
-
+        init {
+            itemView.setOnClickListener {
+                onclick?.invoke(tasks[adapterPosition].id!!)
+            }
+        }
     }
 
     private fun taskDetails(endDate_:String?, startDate_:String?): TaskDetails? {

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_vertical_margin"
+    tools:context=".ui.task.TaskDetailsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:background="@null"
+        android:id="@+id/title"
+        android:paddingStart="@dimen/activity_vertical_margin"
+        android:paddingEnd="@dimen/activity_vertical_margin"
+        android:autofillHints=""
+        android:hint="@string/title"
+        android:imeOptions="actionNext"
+        android:backgroundTint="@color/grey"
+        android:inputType="textShortMessage" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:background="@null"
+        android:id="@+id/description"
+        android:paddingStart="@dimen/activity_vertical_margin"
+        android:paddingEnd="@dimen/activity_vertical_margin"
+        android:autofillHints=""
+        android:imeOptions="actionDone"
+        android:hint="@string/description"
+        android:backgroundTint="@color/grey"
+        android:inputType="textImeMultiLine" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/rectangle_18dp_stroke"
+        android:text="@string/set_deadline"
+        android:id="@+id/set_deadline"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textColor="@color/blue"
+        android:gravity="center"
+        android:textSize="16sp"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@drawable/rectangle_18dp"
+        android:backgroundTint="@color/grey"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/to_do"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+
+
+            android:id="@+id/to_do_txt"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_count"
+            android:text="0"
+            android:textColor="@color/blue"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_toEndOf="@id/to_do_txt"
+            android:padding="4dp"
+            android:background="@drawable/rectangle_18dp_stroke"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_home_black_24dp"
+            android:id="@+id/add_todo"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+
+            android:layout_alignParentEnd="true"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:id="@+id/to_do_recycler"
+            android:layout_below="@id/to_do_txt"/>
+    </RelativeLayout>
+    </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>
