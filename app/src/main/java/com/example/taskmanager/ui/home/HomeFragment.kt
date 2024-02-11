@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager.adapter.HomeAdapter
 import com.example.taskmanager.databinding.FragmentHomeBinding
+import com.example.taskmanager.models.TaskModel
 import com.example.taskmanager.ui.task.FragmentCreateTask
 import com.example.taskmanager.ui.task.TaskDetailsActivity
 
@@ -43,7 +44,7 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.tasks.observe(viewLifecycleOwner){
-            val adapter = HomeAdapter(it)
+            val adapter = HomeAdapter(it as ArrayList<TaskModel>)
             recyclerView.adapter = adapter
             adapter.onclick = { taskId->
                 val taskIntent = Intent(requireContext(),TaskDetailsActivity::class.java)

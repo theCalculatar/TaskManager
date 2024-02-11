@@ -16,8 +16,8 @@ class TaskModel(
     val description: String,
     @ColumnInfo("start date")
     val startDate: String?,
-    @ColumnInfo("end date")
-    val endDate: String?,
+    @ColumnInfo("due date")
+    val dueDate: String?,
     @ColumnInfo("priority")
     val priority: String?,
     )

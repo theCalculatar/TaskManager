@@ -30,7 +30,7 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: HomeAdapter.ViewHolder, position: Int) {
         val task = tasks[position]
-        val days = taskDetails(task.endDate,task.startDate)
+        val days = taskDetails(task.dueDate,task.startDate)
 
         task.title.also {
             holder.title.text = it
@@ -39,7 +39,7 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
             holder.description.text = it
         }
 
-        task.endDate.also {
+        task.dueDate.also {
             holder.days.text = it
         }
         //days can be null if the project deadline has not been set
