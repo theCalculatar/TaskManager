@@ -36,9 +36,6 @@ class TaskDetailsActivity : AppCompatActivity() {
             todoFragment.arguments = bundleOf("taskId" to taskId)
             todoFragment.show(supportFragmentManager,TodoFragment.TAG)
         }
-//        title.afterTextChange(){
-//
-//        }
 
 //        viewModel.getTask(taskId).observe(this){taskModel->
 //            title.setText(taskModel.title,TextView.BufferType.EDITABLE)
@@ -46,11 +43,11 @@ class TaskDetailsActivity : AppCompatActivity() {
 //        }
         val todos = ArrayList<TodoModel>()
         val adapter = TodoAdapter(todos)
+
         viewModel.getTodo(taskId).observe(this){
             todos.addAll(it)
             items.text = it.size.toString()
             todoRecycler.adapter = adapter
-
         }
         adapter.onCheck = { todoId, adapterPosition,complete->
             viewModel.todoChanged(todoId,complete)

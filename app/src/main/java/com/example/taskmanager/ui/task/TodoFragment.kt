@@ -1,19 +1,19 @@
 package com.example.taskmanager.ui.task
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.example.taskmanager.R
-import com.example.taskmanager.models.TodoModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class TodoFragment:BottomSheetDialogFragment() {
@@ -34,26 +34,24 @@ class TodoFragment:BottomSheetDialogFragment() {
         val dueDate = view.findViewById<TextView>(R.id.save)
         val alert = view.findViewById<ImageView>(R.id.alert)
         val taskSpinner = view.findViewById<Spinner>(R.id.task_spinner)
+        val taskPicker = view.findViewById<FrameLayout>(R.id.task_picker)
         //
         var taskId:Long?
 
         arguments?.apply {
-            taskId = this.getLong("taskId")
+            taskId = this.getLong("taskId",-1L)
+            taskPicker.isVisible = taskId==-1L
         }
 
         viewModel.getTodo(2L).observe(viewLifecycleOwner){
             val task = ArrayList<String>().apply {
                 this.add("Select task")
-                it.forEach{ todo->this.add(todo.title) }
+                it.forEach{ todo-> this.add(todo.title) }
             }
 
             val priorityCallback = object : AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long ) {
                     taskId = if (position==1){
                         null
                     }else (position-1).toLong()
@@ -67,7 +65,6 @@ class TodoFragment:BottomSheetDialogFragment() {
                     taskSpinner.adapter = arrayAdapter
                     taskSpinner.onItemSelectedListener = priorityCallback
                 }
-
         }
 
 
