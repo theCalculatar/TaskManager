@@ -62,8 +62,9 @@ class FragmentCreateTask: BottomSheetDialogFragment() {
                 return@setOnClickListener
             }
             //add to local database
-            viewModel.addTask(TaskModel(null,description.text.toString(),
+            viewModel.addTask(TaskModel(null,title.text.toString(),
                 Constants.TASK_STATUS_STARTED,description.text.toString(),null,null,priority))
+            dismiss()
         }
         // spinner adapter
         ArrayAdapter.createFromResource(requireContext(),

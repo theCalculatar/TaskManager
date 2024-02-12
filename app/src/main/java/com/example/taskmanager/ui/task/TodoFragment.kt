@@ -11,9 +11,13 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import com.example.taskmanager.Constants
 import com.example.taskmanager.R
+import com.example.taskmanager.models.TaskModel
+import com.example.taskmanager.models.TodoModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class TodoFragment:BottomSheetDialogFragment() {
@@ -31,7 +35,7 @@ class TodoFragment:BottomSheetDialogFragment() {
         //
         val title = view.findViewById<EditText>(R.id.title)
         val description = view.findViewById<EditText>(R.id.description)
-        val dueDate = view.findViewById<TextView>(R.id.save)
+        val save = view.findViewById<TextView>(R.id.save)
         val alert = view.findViewById<ImageView>(R.id.alert)
         val taskSpinner = view.findViewById<Spinner>(R.id.task_spinner)
         val taskPicker = view.findViewById<FrameLayout>(R.id.task_picker)
@@ -43,7 +47,7 @@ class TodoFragment:BottomSheetDialogFragment() {
             taskPicker.isVisible = taskId==-1L
         }
 
-        viewModel.getTodo(2L).observe(viewLifecycleOwner){
+        viewModel.allTask.observe(viewLifecycleOwner){
             val task = ArrayList<String>().apply {
                 this.add("Select task")
                 it.forEach{ todo-> this.add(todo.title) }
@@ -67,8 +71,20 @@ class TodoFragment:BottomSheetDialogFragment() {
                 }
         }
 
-
-//        viewModel.addTodo()
+        save.setOnClickListener {
+            if (title.text.isEmpty()){
+                title.error = getString(R.string.non_empty_field)
+                Toast.makeText(requireContext(),getString(R.string.fill_all_required_fields), Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+            //add to local database
+            viewModel.addTodo(
+                TodoModel(null,title.text.toString(),
+                description.text.toString(),false,null)
+            )
+            dismiss()
+        }
 
         return view
     }

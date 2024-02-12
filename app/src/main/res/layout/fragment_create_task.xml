@@ -31,7 +31,8 @@
         android:autofillHints=""
         android:hint="@string/title"
         android:backgroundTint="@color/grey"
-        android:inputType="textMultiLine" />
+        android:inputType="textImeMultiLine"
+        android:imeOptions="actionNext"/>
 
     <EditText
         android:layout_width="match_parent"

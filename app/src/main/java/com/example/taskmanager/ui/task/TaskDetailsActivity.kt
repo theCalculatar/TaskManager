@@ -37,10 +37,10 @@ class TaskDetailsActivity : AppCompatActivity() {
             todoFragment.show(supportFragmentManager,TodoFragment.TAG)
         }
 
-//        viewModel.getTask(taskId).observe(this){taskModel->
-//            title.setText(taskModel.title,TextView.BufferType.EDITABLE)
-//            description.setText(taskModel.description,TextView.BufferType.EDITABLE)
-//        }
+        viewModel.getTask(taskId).observe(this){taskModel->
+            title.setText(taskModel.title,TextView.BufferType.EDITABLE)
+            description.setText(taskModel.description,TextView.BufferType.EDITABLE)
+        }
         val todos = ArrayList<TodoModel>()
         val adapter = TodoAdapter(todos)
 
@@ -50,7 +50,7 @@ class TaskDetailsActivity : AppCompatActivity() {
             todoRecycler.adapter = adapter
         }
         adapter.onCheck = { todoId, adapterPosition,complete->
-            viewModel.todoChanged(todoId,complete)
+            viewModel.todoComplete(todoId,complete)
             // throws illegal exception because the method is call while recycler is not finished updating
             try {
                 adapter.notifyItemChanged(adapterPosition)

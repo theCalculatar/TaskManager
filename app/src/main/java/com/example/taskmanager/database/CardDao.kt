@@ -8,7 +8,7 @@ import com.example.taskmanager.models.TodoModel
 @Dao
 interface CardDao {
     @Query("SELECT * FROM task WHERE `id`=:taskId")
-    fun getTask(taskId:Long): TaskModel
+    fun getTask(taskId:Long): LiveData<TaskModel>
 
     @Query("SELECT * FROM task")
     fun getAllTasks():LiveData<List<TaskModel>>
@@ -19,10 +19,14 @@ interface CardDao {
     @Query("DELETE FROM task WHERE `id` = :taskId")
     fun deleteTask(taskId: Long)
 
-    @Query("Update task SET title=:title, description=:description, `start date`=:startDate," +
-            " `due date`=:endDate, `priority`=:priority WHERE id = :taskId")
-    fun updateTask(taskId:Long, title:String, description:String, startDate:String,
-                   endDate:String, priority: String)
+    @Query("UPDATE task SET `start date`=:startDate," +
+            " `due date`=:endDate WHERE id = :taskId")
+    fun updateTask(taskId:Long,  startDate:String,
+                   endDate:String)
+
+    @Query("UPDATE task SET title=:title, description=:description,`priority`=:priority WHERE id = :taskId")
+    fun updateTask(taskId:Long, title:String, description:String, priority: String)
+
 
     /**
      * To do dao
@@ -39,9 +43,17 @@ interface CardDao {
     @Query("DELETE FROM task WHERE `id`=:todoId")
     fun deleteTodo(todoId: Long)
 
-    @Query("Update todo SET title=:title, description=:description, " +
-            "`complete`=:complete, `dueDate`=:dueDate WHERE id = :todoId")
-    fun updateTodo(todoId:Long, title:String, description:String, complete:Boolean,
-                   dueDate:String, )
+    /**
+     * Minor update if only
+     * todo is complete
+     */
+    @Query("Update todo SET `complete`=:complete WHERE id=:todoId")
+    fun updateTodo(todoId: Long, complete: Boolean)
+
+    /**
+     * Updates everything
+     */
+    @Update
+    fun updateTodo(todo: TodoModel)
 
 }

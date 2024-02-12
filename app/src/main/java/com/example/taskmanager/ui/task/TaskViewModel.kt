@@ -21,27 +21,24 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         appDatabase.taskManagerDao().insertTask(task)
     }
 
-    fun getTodo(taskId: Long) = appDatabase.taskManagerDao().getToDos(taskId)
+    fun getTodo(taskId: Long) :LiveData<List<TodoModel>> = appDatabase.taskManagerDao().getToDos(taskId)
 
-//
-//            LiveData<ArrayList<TodoModel>> {
-//        val todos = MutableLiveData<ArrayList<TodoModel>>()
-//        todos.postValue(arrayListOf(
-//            TodoModel(2L,"Go to a meeting","this is the" +
-//                    "\n description is kind long lol\n lool",true,"02/02/2024",),
-//            TodoModel(2L,"Finish Project task manager","this is the description",true,"02/02/2024",),
-//            TodoModel(2L,"Lee","this is the description",false,"02/02/2024",),
-//            ))
-//        return todos
+    fun getTask(taskId: Long) = appDatabase.taskManagerDao().getTask(taskId)
+
+    val allTask:LiveData<List<TaskModel>> = appDatabase.taskManagerDao().getAllTasks()
+
+    fun todoComplete(todoId: Long, complete: Boolean) {
+        appDatabase.taskManagerDao().updateTodo(todoId,complete)
+    }
+
+    fun addTodo(todo: TodoModel){
+        appDatabase.taskManagerDao().insertTodo(todo)
+    }
+//    fun todoChanged(todoModel: TodoModel) {
+//        appDatabase.taskManagerDao().updateTodo(todoModel)
 //    }
 
-    fun todoChanged(todoId: Long, complete: Boolean) {
-
-    }
-
-    fun getTask(taskId: Long): Any {
-        TODO("Not yet implemented")
-    }
+//    fun getTask(taskId: Long) = appDatabase.taskManagerDao().getTask(taskId)
 
 
 //

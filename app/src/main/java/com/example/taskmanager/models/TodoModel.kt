@@ -10,6 +10,6 @@ class TodoModel(
     val title:String,
     val description:String?,
     val complete:Boolean=false,
-    val dueDate:String) {
+    val dueDate:String?) {
 
 }
