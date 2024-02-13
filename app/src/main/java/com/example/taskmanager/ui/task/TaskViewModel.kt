@@ -21,18 +21,18 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         appDatabase.taskManagerDao().insertTask(task)
     }
 
-    fun getTodo(taskId: Long) :LiveData<List<TodoModel>> = appDatabase.taskManagerDao().getToDos(taskId)
+    fun getTodo(taskId: Long) :LiveData<List<TodoModel>> = appDatabase.todoManagerDao().getToDos(taskId)
 
     fun getTask(taskId: Long) = appDatabase.taskManagerDao().getTask(taskId)
 
     val allTask:LiveData<List<TaskModel>> = appDatabase.taskManagerDao().getAllTasks()
 
     fun todoComplete(todoId: Long, complete: Boolean) {
-        appDatabase.taskManagerDao().updateTodo(todoId,complete)
+        appDatabase.todoManagerDao().updateTodo(todoId,complete)
     }
 
     fun addTodo(todo: TodoModel){
-        appDatabase.taskManagerDao().insertTodo(todo)
+        appDatabase.todoManagerDao().insertTodo(todo)
     }
 //    fun todoChanged(todoModel: TodoModel) {
 //        appDatabase.taskManagerDao().updateTodo(todoModel)

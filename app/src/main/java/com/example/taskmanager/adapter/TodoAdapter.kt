@@ -12,7 +12,7 @@ import com.example.taskmanager.R
 import com.example.taskmanager.models.TodoModel
 
 class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
-    var onCheck: ((Long,Int, Boolean) -> Unit)? = null
+    var onCheck: ((taskId:Long, checked:Boolean) -> Unit)? = null
     private lateinit var context:Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_layout_todo,parent,false)
@@ -41,6 +41,9 @@ class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<
         todo.description.also {
             holder.description.text = it
         }
+        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            onCheck?.invoke(todos[position].id!!,isChecked)
+        }
 
 
     }
@@ -52,11 +55,6 @@ class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<
         val description:TextView = itemView.findViewById(R.id.description)
         val dueDate:TextView = itemView.findViewById(R.id.due_date)
         val checkBox:CheckBox = itemView.findViewById(R.id.checkbox)
-        init {
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                onCheck?.invoke(todos[adapterPosition].id!!,adapterPosition,isChecked)
-            }
-        }
     }
 
 }

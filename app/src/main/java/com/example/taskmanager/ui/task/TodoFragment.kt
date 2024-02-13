@@ -1,6 +1,8 @@
 package com.example.taskmanager.ui.task
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +42,7 @@ class TodoFragment:BottomSheetDialogFragment() {
         val taskSpinner = view.findViewById<Spinner>(R.id.task_spinner)
         val taskPicker = view.findViewById<FrameLayout>(R.id.task_picker)
         //
-        var taskId:Long?
+        var taskId:Long?=null
 
         arguments?.apply {
             taskId = this.getLong("taskId",-1L)
@@ -80,7 +82,7 @@ class TodoFragment:BottomSheetDialogFragment() {
             }
             //add to local database
             viewModel.addTodo(
-                TodoModel(null,title.text.toString(),
+                TodoModel(null,taskId,title.text.toString(),
                 description.text.toString(),false,null)
             )
             dismiss()
@@ -91,4 +93,16 @@ class TodoFragment:BottomSheetDialogFragment() {
     override fun getTheme(): Int {
         return R.style.CustomBottomSheetDialog
     }
+}
+
+private fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+    this.addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(editable: Editable?) {
+            afterTextChanged.invoke(editable.toString())
+        }
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+    })
 }

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 class TodoModel(
     @PrimaryKey(true)
     val id:Long?,
+    val taskId:Long?,
     val title:String,
     val description:String?,
     val complete:Boolean=false,

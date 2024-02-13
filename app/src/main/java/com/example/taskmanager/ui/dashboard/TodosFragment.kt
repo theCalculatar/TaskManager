@@ -38,24 +38,18 @@ class TodosFragment : Fragment() {
 
         val todoRecycler: RecyclerView = binding.todosRecycler
         todoRecycler.layoutManager = LinearLayoutManager(requireContext())
-        val todos = ArrayList<TodoModel>()
-        val adapter = TodoAdapter(todos)
 
         binding.newTaskFab.setOnClickListener {
             val todoFragment = TodoFragment()
             todoFragment.show(childFragmentManager, TodoFragment.TAG)
         }
 
-        todosViewModel.getTodo().observe(viewLifecycleOwner){
-            todos.addAll(it)
+        todosViewModel.todos.observe(viewLifecycleOwner){
+            val adapter = TodoAdapter(it as ArrayList<TodoModel>)
             todoRecycler.adapter = adapter
-        }
-        adapter.onCheck = {adapterPosition,selectedPosition,complete->
-            todosViewModel.todoChanged(adapterPosition,complete)
-            // throws illegal exception because the method is call while recycler is not finished updating
-            try {
-                adapter.notifyItemChanged(selectedPosition)
-            }catch (_:IllegalStateException){}
+            adapter.onCheck = {adapterPosition,complete->
+                todosViewModel.todoComplete(adapterPosition,complete)
+            }
         }
         return root
     }

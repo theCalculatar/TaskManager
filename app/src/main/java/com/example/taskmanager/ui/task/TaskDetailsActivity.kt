@@ -41,20 +41,13 @@ class TaskDetailsActivity : AppCompatActivity() {
             title.setText(taskModel.title,TextView.BufferType.EDITABLE)
             description.setText(taskModel.description,TextView.BufferType.EDITABLE)
         }
-        val todos = ArrayList<TodoModel>()
-        val adapter = TodoAdapter(todos)
-
         viewModel.getTodo(taskId).observe(this){
-            todos.addAll(it)
+            val adapter = TodoAdapter(it as ArrayList<TodoModel>)
             items.text = it.size.toString()
             todoRecycler.adapter = adapter
-        }
-        adapter.onCheck = { todoId, adapterPosition,complete->
-            viewModel.todoComplete(todoId,complete)
-            // throws illegal exception because the method is call while recycler is not finished updating
-            try {
-                adapter.notifyItemChanged(adapterPosition)
-            }catch (_:IllegalStateException){}
+            adapter.onCheck = { todoId, complete->
+                viewModel.todoComplete(todoId,complete)
+            }
         }
     }
 }
