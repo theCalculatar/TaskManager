@@ -12,7 +12,10 @@ import com.example.taskmanager.models.TodoModel
 interface TodoDao {
 
     @Query("SELECT * FROM todo WHERE taskId=:taskId")
-    fun getToDos(taskId: Long):LiveData<List<TodoModel>>
+    fun getToDos(taskId: Long):List<TodoModel>
+
+    @Query("SELECT * FROM todo WHERE id=:todoId")
+    fun getToDo(todoId: Long):TodoModel
 
     @Query("SELECT * FROM todo WHERE taskId=:taskId")
     fun getAllToDos(taskId: Long):LiveData<List<TodoModel>>
@@ -23,7 +26,7 @@ interface TodoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTodo(todo:TodoModel)
 
-    @Query("DELETE FROM task WHERE `id`=:todoId")
+    @Query("DELETE FROM todo WHERE `id`=:todoId")
     fun deleteTodo(todoId: Long)
 
     /**

@@ -18,8 +18,7 @@
         android:minHeight="48dp"
         android:background="@null"
         android:id="@+id/title"
-        android:paddingStart="@dimen/activity_vertical_margin"
-        android:paddingEnd="@dimen/activity_vertical_margin"
+
         android:autofillHints=""
         android:hint="@string/title"
         android:imeOptions="actionNext"
@@ -31,25 +30,37 @@
         android:minHeight="48dp"
         android:background="@null"
         android:id="@+id/description"
-        android:paddingStart="@dimen/activity_vertical_margin"
-        android:paddingEnd="@dimen/activity_vertical_margin"
         android:autofillHints=""
         android:imeOptions="actionDone"
         android:hint="@string/description"
         android:backgroundTint="@color/grey"
         android:inputType="textImeMultiLine" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/rectangle_18dp_stroke"
-        android:text="@string/set_deadline"
-        android:id="@+id/set_deadline"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:textColor="@color/blue"
-        android:gravity="center"
-        android:textSize="16sp"
-        />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/rectangle_18dp_stroke"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/due_date"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/set_deadline"
+                android:id="@+id/set_deadline"
+                android:textColor="@color/blue"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textSize="16sp"
+                />
+        </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

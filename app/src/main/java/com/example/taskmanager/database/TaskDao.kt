@@ -21,8 +21,14 @@ interface TaskDao {
 
     @Query("UPDATE task SET `start date`=:startDate," +
             " `due date`=:endDate WHERE id = :taskId")
-    fun updateTask(taskId:Long,  startDate:String,
+    fun updateDate(taskId:Long,  startDate:String,
                    endDate:String)
+
+    @Query("UPDATE task SET `title`=:title WHERE id = :taskId")
+    fun updateTitle(taskId:Long,  title: String)
+
+    @Query("UPDATE task SET `description`=:description WHERE id = :taskId")
+    fun updateDescription(taskId:Long, description:String)
 
     @Query("UPDATE task SET title=:title, description=:description,`priority`=:priority WHERE id = :taskId")
     fun updateTask(taskId:Long, title:String, description:String, priority: String)

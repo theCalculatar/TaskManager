@@ -11,8 +11,10 @@
         android:text="@string/add_todo"
         android:textStyle="bold"
         android:textSize="21sp"
+        android:id="@+id/action"
         android:layout_gravity="center_horizontal"
         />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

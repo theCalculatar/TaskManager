@@ -13,4 +13,7 @@
     <string name="add_todo">Add to-dos</string>
     <string name="add">Add</string>
     <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="mark_complete">Mark complete</string>
+    <string name="update">Upadate</string>
 </resources>

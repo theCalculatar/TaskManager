@@ -10,7 +10,7 @@ class TodoModel(
     val taskId:Long?,
     val title:String,
     val description:String?,
-    val complete:Boolean=false,
+    var complete:Boolean=false,
     val dueDate:String?) {
 
 }

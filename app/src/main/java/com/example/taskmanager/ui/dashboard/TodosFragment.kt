@@ -47,8 +47,8 @@ class TodosFragment : Fragment() {
         todosViewModel.todos.observe(viewLifecycleOwner){
             val adapter = TodoAdapter(it as ArrayList<TodoModel>)
             todoRecycler.adapter = adapter
-            adapter.onCheck = {adapterPosition,complete->
-                todosViewModel.todoComplete(adapterPosition,complete)
+            adapter.onCheck = { _, model->
+                todosViewModel.todoComplete(model.id!!,model.complete)
             }
         }
         return root

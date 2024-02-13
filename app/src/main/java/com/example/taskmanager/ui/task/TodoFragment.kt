@@ -3,6 +3,7 @@ package com.example.taskmanager.ui.task
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.example.taskmanager.Constants
 import com.example.taskmanager.R
-import com.example.taskmanager.models.TaskModel
 import com.example.taskmanager.models.TodoModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -31,7 +31,7 @@ class TodoFragment:BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val viewModel = ViewModelProvider(this)[TaskViewModel::class.java]
+        val viewModel = ViewModelProvider(requireActivity())[TaskViewModel::class.java]
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_todo,container)
         //
@@ -41,31 +41,52 @@ class TodoFragment:BottomSheetDialogFragment() {
         val alert = view.findViewById<ImageView>(R.id.alert)
         val taskSpinner = view.findViewById<Spinner>(R.id.task_spinner)
         val taskPicker = view.findViewById<FrameLayout>(R.id.task_picker)
+        val actionTxt = view.findViewById<TextView>(R.id.action)
         //
-        var taskId:Long?=null
+        var taskId:Long? = null
+        var todoId:Long? = null
+        var action:Int? = null
+        var position:Int? = null
 
         arguments?.apply {
             taskId = this.getLong("taskId",-1L)
             taskPicker.isVisible = taskId==-1L
+            this.getInt("action").let {
+                when (it) {
+                    Constants.TODO_UPDATE -> {
+                        actionTxt.text = getString(R.string.update)
+                        action = it
+                        todoId = this.getLong("todoId",-1L)
+                        position = this.getInt("position")
+                    }
+                }
+            }
         }
-
-        viewModel.allTask.observe(viewLifecycleOwner){
+        todoId?.let {
+            viewModel.getTodo(todoId!!).observe(viewLifecycleOwner) {
+                title.setText(it.title, TextView.BufferType.EDITABLE)
+                description.setText(it.description, TextView.BufferType.EDITABLE)
+            }
+        }
+        viewModel.allTask.observe(viewLifecycleOwner) {
             val task = ArrayList<String>().apply {
                 this.add("Select task")
-                it.forEach{ todo-> this.add(todo.title) }
+                it.forEach { todo -> this.add(todo.title) }
             }
 
-            val priorityCallback = object : AdapterView.OnItemSelectedListener{
+            val priorityCallback = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
-                    parent: AdapterView<*>?, view: View?, position: Int, id: Long ) {
-                    taskId = if (position==1){
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long
+                ) {
+                    taskId = if (position == 1) {
                         null
-                    }else (position-1).toLong()
+                    } else (position - 1).toLong()
                 }
+
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,task)
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, task)
                 .also { arrayAdapter ->
                     arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     taskSpinner.adapter = arrayAdapter
@@ -80,14 +101,18 @@ class TodoFragment:BottomSheetDialogFragment() {
                     .show()
                 return@setOnClickListener
             }
-            //add to local database
-            viewModel.addTodo(
-                TodoModel(null,taskId,title.text.toString(),
+            val todo = TodoModel(todoId,taskId,title.text.toString(),
                 description.text.toString(),false,null)
-            )
+            Log.d("hereBro",todoId.toString())
+
+            //add to local database
+            todoId?.let {
+                viewModel.updateTodo(todo,position!!)
+                Log.d("hereBro","fr")
+            }?: viewModel.addTodo(todo)
+
             dismiss()
         }
-
         return view
     }
     override fun getTheme(): Int {
@@ -95,7 +120,7 @@ class TodoFragment:BottomSheetDialogFragment() {
     }
 }
 
-private fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(editable: Editable?) {
             afterTextChanged.invoke(editable.toString())

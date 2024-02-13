@@ -2,17 +2,22 @@ package com.example.taskmanager.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.R
 import com.example.taskmanager.models.TodoModel
 
 class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
-    var onCheck: ((taskId:Long, checked:Boolean) -> Unit)? = null
+    var onCheck: ((position: Int, model: TodoModel) -> Unit)? = null
+    var onItemLongClick: ((menuId:Int, position:Int, todo:TodoModel) -> Unit)? = null
+
     private lateinit var context:Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_layout_todo,parent,false)
@@ -42,7 +47,8 @@ class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<
             holder.description.text = it
         }
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            onCheck?.invoke(todos[position].id!!,isChecked)
+            todo.complete = !todo.complete
+            onCheck?.invoke(position,todos[position])
         }
 
 
@@ -55,6 +61,21 @@ class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<
         val description:TextView = itemView.findViewById(R.id.description)
         val dueDate:TextView = itemView.findViewById(R.id.due_date)
         val checkBox:CheckBox = itemView.findViewById(R.id.checkbox)
+        init {
+            itemView.setOnCreateContextMenuListener { menu, _, _ ->
+                MenuInflater(context).inflate(R.menu.long_click_menu,menu)
+                menu.forEach {
+                    it.setOnMenuItemClickListener {menuItem->
+                        when(menuItem.itemId){
+                            //toggle check box
+                            R.id.mark_complete->checkBox.isChecked=!checkBox.isChecked
+                        }
+                        onItemLongClick?.invoke(menuItem.itemId, adapterPosition, todos[adapterPosition])
+                        false
+                    }
+                }
+            }
+        }
     }
 
 }
