@@ -97,7 +97,7 @@
             android:src="@drawable/widget_add_light"
             android:id="@+id/add_todo"
             android:layout_marginEnd="@dimen/activity_vertical_margin"
-
+            app:tint="?colorControlNormal"
             android:layout_alignParentEnd="true"
             />
         <androidx.recyclerview.widget.RecyclerView

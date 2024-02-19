@@ -13,13 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.adapter.HomeAdapter
 import com.example.taskmanager.adapter.TodoAdapter
 import com.example.taskmanager.adapter.TodoFragmentAdapter
-import com.example.taskmanager.databinding.FragmentDashboardBinding
+import com.example.taskmanager.databinding.FragmentTaskBinding
+import com.example.taskmanager.databinding.FragmentTodoBinding
 import com.example.taskmanager.models.TodoModel
 import com.example.taskmanager.ui.task.TodoFragment
 
 class TodosFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentTaskBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -33,7 +34,7 @@ class TodosFragment : Fragment() {
         val todosViewModel =
             ViewModelProvider(this).get(TodosViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentTaskBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val todoRecycler: RecyclerView = binding.todosRecycler

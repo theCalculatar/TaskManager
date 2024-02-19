@@ -63,9 +63,9 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         appDatabase.todoManagerDao().insertTodo(todo)
     }
 
-    fun deleteTodo(todo: TodoModel,position: Int){
-        crudTodo.postValue(CrudTodo(position,Constants.TODO_DEL,todo))
-        appDatabase.todoManagerDao().deleteTodo(todo.id!!)
+    fun deleteTodo(todoId: Long,position: Int){
+        crudTodo.postValue(CrudTodo(position,Constants.TODO_DEL,null))
+        appDatabase.todoManagerDao().deleteTodo(todoId)
     }
 
     fun updateTodo(todo: TodoModel, position: Int){
@@ -77,5 +77,6 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
     class CrudTodo(
         val position: Int?,
         val action:Int,
-        val model: TodoModel)
+        val model: TodoModel?
+    )
 }

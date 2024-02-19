@@ -39,6 +39,7 @@ class TaskDetailsActivity : AppCompatActivity() {
         // From homepage
         val taskId = intent.getLongExtra("taskId", -1)
         //
+        var listSize = 0
         todoRecycler.layoutManager = LinearLayoutManager(this)
 
         setDueDate.setOnClickListener {
@@ -103,15 +104,19 @@ class TaskDetailsActivity : AppCompatActivity() {
 
             when(crudTodo.action){
                 Constants.TODO_ADD-> {
-                    todos.add(crudTodo.model)
+                    todos.add(crudTodo.model!!)
                     adapter.notifyItemInserted(todos.size-1)
+                    listSize++
+                    items.text = listSize.toString()
                 }
                 Constants.TODO_DEL->{
-                    todos.remove(crudTodo.model)
-                    adapter.notifyItemRemoved(crudTodo.position!!)
+                    todos.removeAt(crudTodo.position!!)
+                    adapter.notifyItemRemoved(crudTodo.position)
+                    listSize--
+                    items.text = listSize.toString()
                 }
                 Constants.TODO_UPDATE->{
-                    todos [crudTodo.position!!] = crudTodo.model
+                    todos [crudTodo.position!!] = crudTodo.model!!
                     adapter.notifyItemChanged(crudTodo.position)
                 }
             }
@@ -120,18 +125,19 @@ class TaskDetailsActivity : AppCompatActivity() {
         viewModel.getTodos(taskId).observe(this) {
             todos.addAll(it)
             items.text = it.size.toString()
+            listSize = it.size
             adapter.notifyItemInserted(todos.size)
         }
 
         adapter.onCheck = { _, model ->
-            TODO()//use other attributes than id because it is unknown after it is saved to the databse
+//            TODO()//use other attributes than id because it is unknown after it is saved to the databse
             viewModel.todoComplete(model.id!!,model.complete)
         }
 
         adapter.onItemLongClick = { menuId, position, todo ->
             when(menuId){
                 R.id.delete->{
-                    viewModel.deleteTodo(todo,position)
+                    viewModel.deleteTodo(todo.id!!,position)
                 }
                 R.id.mark_complete->{
                     viewModel.todoComplete(todo.id!!, !todo.complete )

@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="@dimen/layout_vertical_margin"
-    android:paddingEnd="@dimen/layout_vertical_margin"
     tools:context=".ui.home.HomeFragment">
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -19,7 +17,7 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_vertical_margin"
         app:layout_constraintRight_toRightOf="parent"
-        android:src="@drawable/widget_add_light"
+        android:src="@drawable/baseline_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
