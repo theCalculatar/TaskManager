@@ -46,12 +46,10 @@ class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<
         todo.description.also {
             holder.description.text = it
         }
-        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+        holder.checkBox.setOnCheckedChangeListener { _, _ ->
             todo.complete = !todo.complete
             onCheck?.invoke(position,todos[position])
         }
-
-
     }
     override fun getItemCount() =  todos.size
 
@@ -62,6 +60,7 @@ class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<
         val dueDate:TextView = itemView.findViewById(R.id.due_date)
         val checkBox:CheckBox = itemView.findViewById(R.id.checkbox)
         init {
+            //initialize items with context menu
             itemView.setOnCreateContextMenuListener { menu, _, _ ->
                 MenuInflater(context).inflate(R.menu.long_click_menu,menu)
                 menu.forEach {

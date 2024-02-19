@@ -130,23 +130,23 @@ class TaskDetailsActivity : AppCompatActivity() {
         }
 
         adapter.onCheck = { _, model ->
-//            TODO()//use other attributes than id because it is unknown after it is saved to the databse
-            viewModel.todoComplete(model.id!!,model.complete)
+            //mark model complete
+            viewModel.todoComplete(model.id,model.complete)
         }
 
         adapter.onItemLongClick = { menuId, position, todo ->
             when(menuId){
                 R.id.delete->{
-                    viewModel.deleteTodo(todo.id!!,position)
+                    viewModel.deleteTodo(todo.id,position)
                 }
                 R.id.mark_complete->{
-                    viewModel.todoComplete(todo.id!!, !todo.complete )
+                    viewModel.todoComplete(todo.id, !todo.complete )
                 }
                 R.id.update->{
                     val todoFragment = TodoFragment()
                     todoFragment.arguments = bundleOf("taskId" to taskId,
                         "position" to position,
-                        "todoId" to todo.id!!,
+                        "todoId" to todo.id,
                         "action" to Constants.TODO_UPDATE)
                     todoFragment.show(supportFragmentManager,todoFragment.tag)
                 }

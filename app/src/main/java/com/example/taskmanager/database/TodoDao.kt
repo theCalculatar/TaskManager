@@ -21,7 +21,7 @@ interface TodoDao {
     fun getAllToDos(taskId: Long):LiveData<List<TodoModel>>
 
     @Query("SELECT * FROM todo")
-    fun getAllToDos():LiveData<List<TodoModel>>
+    fun getAllToDos():List<TodoModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTodo(todo:TodoModel)

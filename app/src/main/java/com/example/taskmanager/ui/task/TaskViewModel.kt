@@ -13,10 +13,14 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
 
     private var appDatabase :AppDatabase
     val crudTodo = MutableLiveData<CrudTodo>()
+
     init {
         appDatabase = AppDatabase.getDatabase(application)!!
     }
 
+    private val  _todos = MutableLiveData<List<TodoModel>>().apply {
+        value = appDatabase.todoManagerDao().getAllToDos()
+    }
     fun addTask(task: TaskModel) {
         appDatabase.taskManagerDao().insertTask(task)
     }
@@ -49,6 +53,7 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
+    val todos: LiveData<List<TodoModel>> = _todos
     val allTask:LiveData<List<TaskModel>> = appDatabase.taskManagerDao().getAllTasks()
 
     fun todoComplete(todoId: String, complete: Boolean) {

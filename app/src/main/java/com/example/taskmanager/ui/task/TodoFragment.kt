@@ -39,24 +39,25 @@ class TodoFragment:BottomSheetDialogFragment() {
         val description = view.findViewById<EditText>(R.id.description)
         val save = view.findViewById<TextView>(R.id.save)
         val alert = view.findViewById<ImageView>(R.id.alert)
+        val delete = view.findViewById<ImageView>(R.id.delete_todo)
         val taskSpinner = view.findViewById<Spinner>(R.id.task_spinner)
         val taskPicker = view.findViewById<FrameLayout>(R.id.task_picker)
         val actionTxt = view.findViewById<TextView>(R.id.action)
         //
         var taskId:Long? = null
-        var todoId:Long? = null
-        var action:Int? = null
+        var todoId:String? = null
         var position:Int? = null
 
         arguments?.apply {
             taskId = this.getLong("taskId",-1L)
             taskPicker.isVisible = taskId==-1L
             this.getInt("action").let {
+                //from selected todo
                 when (it) {
                     Constants.TODO_UPDATE -> {
+                        delete.isVisible = true // enables delete button
                         actionTxt.text = getString(R.string.update)
-                        action = it
-                        todoId = this.getLong("todoId",-1L)
+                        todoId = this.getString("todoId",null)
                         position = this.getInt("position")
                     }
                 }
@@ -94,6 +95,12 @@ class TodoFragment:BottomSheetDialogFragment() {
                 }
         }
 
+        delete.setOnClickListener {
+            //using live data to update both fragments
+            viewModel.deleteTodo(todoId!!,position!!)
+            dismiss()
+        }
+
         save.setOnClickListener {
             if (title.text.isEmpty()){
                 title.error = getString(R.string.non_empty_field)
@@ -101,15 +108,18 @@ class TodoFragment:BottomSheetDialogFragment() {
                     .show()
                 return@setOnClickListener
             }
-            val todo = TodoModel(todoId,taskId,title.text.toString(),
-                description.text.toString(),false,null)
-            Log.d("hereBro",todoId.toString())
 
-            //add to local database
-            todoId?.let {
+            //add to local database or updating depending on whether to-do was passed
+            if (todoId!=null){
+                val todo = TodoModel(todoId!!,taskId,title.text.toString(),
+                    description.text.toString(),false,null)
                 viewModel.updateTodo(todo,position!!)
-                Log.d("hereBro","fr")
-            }?: viewModel.addTodo(todo)
+            }else{
+                todoId = java.util.UUID.randomUUID().toString().substring(0..6)
+                val todo = TodoModel(todoId!!,taskId,title.text.toString(),
+                    description.text.toString(),false,null)
+                viewModel.addTodo(todo)
+            }
 
             dismiss()
         }
@@ -125,9 +135,7 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         override fun afterTextChanged(editable: Editable?) {
             afterTextChanged.invoke(editable.toString())
         }
-
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     })
 }
