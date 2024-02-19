@@ -94,7 +94,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_home_black_24dp"
+            android:src="@drawable/widget_add_light"
             android:id="@+id/add_todo"
             android:layout_marginEnd="@dimen/activity_vertical_margin"
 

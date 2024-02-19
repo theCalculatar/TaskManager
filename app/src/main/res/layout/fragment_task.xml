@@ -22,7 +22,7 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_vertical_margin"
         app:layout_constraintRight_toRightOf="parent"
-        android:src="@drawable/ic_home_black_24dp"
+        android:src="@drawable/widget_add_light"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
