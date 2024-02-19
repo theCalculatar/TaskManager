@@ -49,7 +49,7 @@ class TodosFragment : Fragment() {
             val adapter = TodoAdapter(it as ArrayList<TodoModel>)
             todoRecycler.adapter = adapter
             adapter.onCheck = { _, model->
-                todosViewModel.todoComplete(model.id!!,model.complete)
+                todosViewModel.todoComplete(model.id,model.complete)
             }
         }
         return root

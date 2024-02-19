@@ -12,7 +12,7 @@ import com.example.taskmanager.R
 import com.example.taskmanager.models.TodoModel
 
 class TodoFragmentAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<TodoFragmentAdapter.ViewHolder>() {
-    var onCheck: ((Long,Int, Boolean) -> Unit)? = null
+    var onCheck: ((String,Int, Boolean) -> Unit)? = null
     private lateinit var context:Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoFragmentAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_layout_todo,parent,false)

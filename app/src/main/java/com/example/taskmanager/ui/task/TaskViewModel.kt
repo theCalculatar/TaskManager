@@ -26,7 +26,7 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         mutableTodos.postValue(appDatabase.todoManagerDao().getToDos(taskId))
         return mutableTodos
     }
-    fun getTodo(todoId: Long): MutableLiveData<TodoModel> {
+    fun getTodo(todoId: String): MutableLiveData<TodoModel> {
 
         val mutableLiveData = MutableLiveData<TodoModel>()
         mutableLiveData.postValue(appDatabase.todoManagerDao().getToDo(todoId))
@@ -51,19 +51,19 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
 
     val allTask:LiveData<List<TaskModel>> = appDatabase.taskManagerDao().getAllTasks()
 
-    fun todoComplete(todoId: Long, complete: Boolean) {
+    fun todoComplete(todoId: String, complete: Boolean) {
         appDatabase.todoManagerDao().updateTodo(todoId,complete)
     }
 
     /**
-     * CRUD todo model
+     * CRUD to-do model
      */
     fun addTodo(todo: TodoModel){
         crudTodo.postValue(CrudTodo(null,Constants.TODO_ADD,todo))
         appDatabase.todoManagerDao().insertTodo(todo)
     }
 
-    fun deleteTodo(todoId: Long,position: Int){
+    fun deleteTodo(todoId: String,position: Int){
         crudTodo.postValue(CrudTodo(position,Constants.TODO_DEL,null))
         appDatabase.todoManagerDao().deleteTodo(todoId)
     }

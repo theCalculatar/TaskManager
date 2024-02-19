@@ -15,7 +15,7 @@ interface TodoDao {
     fun getToDos(taskId: Long):List<TodoModel>
 
     @Query("SELECT * FROM todo WHERE id=:todoId")
-    fun getToDo(todoId: Long):TodoModel
+    fun getToDo(todoId: String):TodoModel
 
     @Query("SELECT * FROM todo WHERE taskId=:taskId")
     fun getAllToDos(taskId: Long):LiveData<List<TodoModel>>
@@ -27,14 +27,14 @@ interface TodoDao {
     fun insertTodo(todo:TodoModel)
 
     @Query("DELETE FROM todo WHERE `id`=:todoId")
-    fun deleteTodo(todoId: Long)
+    fun deleteTodo(todoId: String)
 
     /**
      * Minor update if only
      * todo is complete
      */
     @Query("Update todo SET `complete`=:complete WHERE id=:todoId")
-    fun updateTodo(todoId: Long, complete: Boolean)
+    fun updateTodo(todoId: String, complete: Boolean)
 
     /**
      * Updates everything

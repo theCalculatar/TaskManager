@@ -17,7 +17,7 @@ class TodosViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     val todos: LiveData<List<TodoModel>> = appDatabase.todoManagerDao().getAllToDos()
-    fun todoComplete(todoId: Long, complete: Boolean) {
+    fun todoComplete(todoId: String, complete: Boolean) {
         appDatabase.todoManagerDao().updateTodo(todoId,complete)
     }
 }

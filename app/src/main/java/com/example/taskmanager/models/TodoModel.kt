@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity("todo")
 class TodoModel(
-    @PrimaryKey(true)
-    val id:Long?,
+    @PrimaryKey(false)
+    val id:String,
     val taskId:Long?,
     val title:String,
     val description:String?,
