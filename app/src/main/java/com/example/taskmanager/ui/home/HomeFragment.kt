@@ -35,21 +35,19 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val newTaskFab = binding.newTaskFab
         val recyclerView = binding.taskRecyclerView
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        newTaskFab.setOnClickListener {
-            FragmentCreateTask().show(childFragmentManager,FragmentCreateTask.TAG)
-        }
+
 
         homeViewModel.tasks.observe(viewLifecycleOwner){
             val adapter = HomeAdapter(it as ArrayList<TaskModel>)
             recyclerView.adapter = adapter
+            //on clicked items
             adapter.onclick = { taskId->
                 val taskIntent = Intent(requireContext(),TaskDetailsActivity::class.java)
                 taskIntent.putExtra("taskId",taskId)
-                startActivity(taskIntent)
+                startActivity(taskIntent)// launch activity passing taskId
             }
         }
         return root

@@ -42,10 +42,7 @@ class TodosFragment : Fragment() {
         todoRecycler.layoutManager = LinearLayoutManager(requireContext())
         //
 
-        binding.newTaskFab.setOnClickListener {
-            val todoFragment = TodoFragment()
-            todoFragment.show(childFragmentManager, TodoFragment.TAG)
-        }
+
         val todos = ArrayList<TodoModel>(0)
         val adapter = TodoAdapter(todos)
         todoRecycler.adapter = adapter
