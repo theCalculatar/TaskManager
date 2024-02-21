@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="@dimen/activity_vertical_margin"
+    android:theme="@style/Theme.TaskManager"
     android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -49,7 +50,7 @@
         android:paddingEnd="@dimen/activity_vertical_margin"
         android:autofillHints=""
         android:hint="@string/title"
-        android:backgroundTint="@color/grey"
+        android:backgroundTint="?backgroundColor"
         android:imeOptions="actionNext"
         android:inputType="text" />
 
@@ -64,14 +65,14 @@
         android:imeOptions="actionDone"
         android:autofillHints=""
         android:hint="@string/description"
-        android:backgroundTint="@color/grey"
+        android:backgroundTint="?backgroundColor"
         android:inputType="text" />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:id="@+id/task_picker"
-        android:backgroundTint="@color/grey"
+        android:backgroundTint="?backgroundColor"
         android:background="@drawable/rectangle_18dp"
         >
         <Spinner
@@ -79,6 +80,7 @@
             android:layout_height="48dp"
             android:paddingStart="@dimen/layout_vertical_margin"
             android:paddingEnd="@dimen/layout_vertical_margin"
+            android:backgroundTint="?colorControlNormal"
             android:layout_gravity="center"
             android:id="@+id/task_spinner"
             android:spinnerMode="dropdown"

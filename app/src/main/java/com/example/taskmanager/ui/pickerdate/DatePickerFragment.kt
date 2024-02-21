@@ -24,6 +24,7 @@ import android.util.Log
 import android.widget.DatePicker
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.taskmanager.R
 import com.example.taskmanager.ui.task.TaskViewModel
 import java.time.LocalDate
 import java.time.Month
@@ -72,6 +73,10 @@ class DatePickerFragment : DialogFragment(),
 
     override fun onDismiss(dialog: DialogInterface) {
 
+    }
+
+    override fun getTheme(): Int {
+        return R.style.RoundedCornersBottomDialog
     }
 
 

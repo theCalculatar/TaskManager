@@ -126,7 +126,7 @@ class TodoFragment:BottomSheetDialogFragment() {
         return view
     }
     override fun getTheme(): Int {
-        return R.style.CustomBottomSheetDialog
+        return R.style.RoundedCornersBottomDialog
     }
 }
 

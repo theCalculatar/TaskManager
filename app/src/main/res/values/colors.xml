@@ -12,7 +12,15 @@
     <color name="green_500">#4CAF50</color>
     <color name="yellow_500">#FFEB3B</color>
     <color name="blue">#246bfd</color>
+    <color name="darkBlue">#1f222a</color>
+    
+    //Dark mode
+    <color name="darker">#181a20</color>
+    <color name="background">#1f222a</color>
+
+    <color name="grey">#F7F7F7</color>
+    <color name="light_blue_background">#f6fafd</color>
 
 
-    <color name="grey">#90A6A6A6</color>
+    <color name="balck_text_color">#212121</color>
 </resources>

@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@drawable/rectangle_18dp"
-        android:backgroundTint="@color/grey"
+        android:backgroundTint="?background"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
         >
@@ -97,7 +97,7 @@
             android:src="@drawable/widget_add_light"
             android:id="@+id/add_todo"
             android:layout_marginEnd="@dimen/activity_vertical_margin"
-            app:tint="?colorControlNormal"
+            app:tint="?iconTint"
             android:layout_alignParentEnd="true"
             />
         <androidx.recyclerview.widget.RecyclerView
