@@ -1,7 +1,6 @@
 package com.example.taskmanager.ui.tasks
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +14,12 @@ import com.example.taskmanager.R
 import com.example.taskmanager.adapter.TodoAdapter
 import com.example.taskmanager.databinding.FragmentTaskBinding
 import com.example.taskmanager.models.TodoModel
+import com.example.taskmanager.ui.alarmManager.AlarmItem
+import com.example.taskmanager.ui.alarmManager.AlarmScheduler
+import com.example.taskmanager.ui.alarmManager.AlarmSchedulerImpl
 import com.example.taskmanager.ui.task.TaskViewModel
 import com.example.taskmanager.ui.task.TodoFragment
+import kotlin.math.abs
 
 class TodosFragment : Fragment() {
 
@@ -25,6 +28,7 @@ class TodosFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var alarmScheduler: AlarmScheduler
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,16 +36,16 @@ class TodosFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val viewModel =
-            ViewModelProvider(requireActivity()).get(TaskViewModel::class.java)
+            ViewModelProvider(this).get(TaskViewModel::class.java)
 
         _binding = FragmentTaskBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        //
+        //set up recycler
         val todoRecycler: RecyclerView = binding.todosRecycler
         todoRecycler.layoutManager = LinearLayoutManager(requireContext())
-        //
-
+        //innit
+        alarmScheduler = AlarmSchedulerImpl(requireActivity())
 
         val todos = ArrayList<TodoModel>(0)
         val adapter = TodoAdapter(todos)
@@ -55,8 +59,13 @@ class TodosFragment : Fragment() {
                     adapter.notifyItemInserted(todos.size-1)
                 }
                 Constants.TODO_DEL->{
-                    todos.removeAt(crudTodo.position!!)
-                    adapter.notifyItemRemoved(crudTodo.position)
+                    //may
+                    try {
+                        todos.removeAt(crudTodo.position!!)
+                        adapter.notifyItemRemoved(crudTodo.position)
+                    }catch (_:java.lang.IndexOutOfBoundsException){
+
+                    }
                 }
                 Constants.TODO_UPDATE->{
                     todos [crudTodo.position!!] = crudTodo.model!!
@@ -68,12 +77,18 @@ class TodosFragment : Fragment() {
         adapter.onCheck = { _, model ->
             //mark model complete
             viewModel.todoComplete(model.id,model.complete)
+            // cancel alarm on delete
+            AlarmItem(null,null, -abs(model.id.hashCode().toLong()))
+                .let(alarmScheduler::cancel)
         }
 
         adapter.onItemLongClick = { menuId, position, todo ->
             when(menuId){
                 R.id.delete->{
                     viewModel.deleteTodo(todo.id,position)
+                    // cancel alarm on delete
+                    AlarmItem(null,null, -abs(todo.id.hashCode()).toLong())
+                        .let(alarmScheduler::cancel)
                 }
                 R.id.mark_complete->{
                     viewModel.todoComplete(todo.id, !todo.complete )

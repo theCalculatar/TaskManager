@@ -18,26 +18,23 @@ package com.example.taskmanager.ui.pickerdate
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.widget.DatePicker
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.taskmanager.R
-import com.example.taskmanager.ui.task.TaskViewModel
-import java.time.LocalDate
-import java.time.Month
-import java.util.Calendar
+import java.util.*
 
 class DatePickerFragment : DialogFragment(),
     OnDateSetListener {
 
-    private var taskId:Long?= null
+    private var itemId:Long?= null
+    private var title:String?= null
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         arguments?.let {
-            taskId = it.getLong("taskId")
+            itemId = it.getLong("itemId")
+            title = it.getString("title",null)
         }
 
         // Use the current date as the default date in the picker.
@@ -62,16 +59,13 @@ class DatePickerFragment : DialogFragment(),
      */
     override fun onDateSet(datePicker: DatePicker, year: Int, month: Int, day: Int) {
         // Set the date for Task.
-        val viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
-
-        taskId?.let { viewModel.addDates(it,"$year ${month+1} $day","$year ${month+1} $day") }?: {
-            TimePickerFragment().show(childFragmentManager, "timePicker")
-        }
-        dismissNow()
-
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
+            requireActivity().supportFragmentManager.let {
+                val timePickerFragment = TimePickerFragment()
+                //pass date to time fragment to complete time set
+                timePickerFragment.arguments = bundleOf("itemId" to itemId, "title" to title,
+                    "year" to year,
+                    "month" to month+1, "day" to day, )
+                timePickerFragment.show(it, "timePicker") }
 
     }
 

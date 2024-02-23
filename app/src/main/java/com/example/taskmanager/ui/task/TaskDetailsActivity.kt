@@ -1,7 +1,9 @@
 package com.example.taskmanager.ui.task
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils.substring
 import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -16,9 +18,11 @@ import com.example.taskmanager.Constants
 import com.example.taskmanager.R
 import com.example.taskmanager.adapter.TodoAdapter
 import com.example.taskmanager.models.TodoModel
+import com.example.taskmanager.ui.alarmManager.AlarmItem
 import com.example.taskmanager.ui.pickerdate.DatePickerFragment
 import kotlinx.coroutines.launch
-import java.time.Month
+import java.time.LocalDateTime
+import kotlin.collections.ArrayList
 
 class TaskDetailsActivity : AppCompatActivity() {
 
@@ -39,14 +43,10 @@ class TaskDetailsActivity : AppCompatActivity() {
         // From homepage
         val taskId = intent.getLongExtra("taskId", -1)
         //
+        var alarmItem: AlarmItem?
+
         var listSize = 0
         todoRecycler.layoutManager = LinearLayoutManager(this)
-
-        setDueDate.setOnClickListener {
-            val datePicker = DatePickerFragment()
-            datePicker.arguments = bundleOf("taskId" to taskId)
-            datePicker.show(supportFragmentManager, "DatePicker")
-        }
 
         addTodo.setOnClickListener {
             val todoFragment = TodoFragment()
@@ -55,17 +55,23 @@ class TaskDetailsActivity : AppCompatActivity() {
         }
 
         viewModel.getTask(taskId).observe(this) { taskModel ->
-
             title.setText(taskModel.title, TextView.BufferType.EDITABLE)
             description.setText(taskModel.description, TextView.BufferType.EDITABLE)
 
-            taskModel.dueDate?.split(" ")?.let { dateParts->
-                val month = Month.of(dateParts[1].toInt()).toString().substring(0..2)
-                val dueDate = "${dateParts[0]} $month ${dateParts[2]}"
-                date.setText(dueDate, TextView.BufferType.EDITABLE)
+            taskModel.dueDate?.let {
+                dateTime(it).let {
+                    val month = it.month.toString().substring(0..2)
+                    val dueDate = "${it.year} $month ${it.dayOfMonth}"
+                    date.setText(dueDate, TextView.BufferType.EDITABLE)
+                }
             }
-        }
+            setDueDate.setOnClickListener {
+                val datePicker = DatePickerFragment()
+                datePicker.arguments = bundleOf("itemId" to taskId, "title" to taskModel.title)
+                datePicker.show(supportFragmentManager, "DatePicker")
+            }
 
+        }
 
         // uses watcher to update title
         title.apply {
@@ -152,6 +158,19 @@ class TaskDetailsActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    private fun dateTime(date:String):LocalDateTime{
+        val dateParts = date.split("-")
+        val timeParts = dateParts[2].split("T")[1].split(":")
+
+        val year = dateParts[0].toInt()
+        val month = dateParts[1].toInt()
+        val dayOfMonth = dateParts[2].split("T")[0].toInt()
+
+        val hour = timeParts[0].toInt()
+        val minute = timeParts[1].toInt()
+
+        return LocalDateTime.of(year,month,dayOfMonth, hour, minute)
     }
 }
 

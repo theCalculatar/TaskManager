@@ -22,15 +22,34 @@ import android.os.Bundle
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.taskmanager.ui.alarmManager.AlarmItem
+import com.example.taskmanager.ui.alarmManager.AlarmScheduler
+import com.example.taskmanager.ui.alarmManager.AlarmSchedulerImpl
 import com.example.taskmanager.ui.task.TaskViewModel
-import java.util.Calendar
+import java.time.LocalDateTime
+import java.util.*
 
 class TimePickerFragment : DialogFragment(),
     OnTimeSetListener {
+
+    private var year:Int = 0
+    private var month:Int = 0
+    private var dayOfMonth:Int = 0
+    private var itemId:Long = 0
+    private var title:String? = null
+    private lateinit var alarmScheduler: AlarmScheduler
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
+        alarmScheduler = AlarmSchedulerImpl(requireActivity())
 
-
+        arguments?.let {
+            year = it.getInt("year")
+            month = it.getInt("month")
+            dayOfMonth = it.getInt("day")
+            itemId = it.getLong("itemId")
+            title = it.getString("title",null)
+        }
         // Use the current date as the default date in the picker.
         val c = Calendar.getInstance()
         val hour = c.get(Calendar.HOUR_OF_DAY)
@@ -41,18 +60,34 @@ class TimePickerFragment : DialogFragment(),
     }
 
     /**
-     * Grabs the date and passes it to processDatePickerResult().
+     * Grabs the date and passes it to timePickerResult().
      *
-     * @param datePicker  The date picker view
-     * @param year  The year chosen
-     * @param month The month chosen
-     * @param day   The day chosen
+     * @param hourOfDay  The hour chosen
+     * @param minute  The minutes chosen
      */
-
-
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        val viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
-//        Log.d(tag, LocalDate.of(year, month + 1, day).month.toString())
-//        Log.d(tag, LocalDate.of(year, month, day).toString())    }
-        }
+
+        val viewModel = ViewModelProvider(requireActivity()).get(TaskViewModel::class.java)
+        val dueDate = LocalDateTime.of(year, month, dayOfMonth,hourOfDay,minute)
+
+        //update Database only if item is task
+        if (itemId>0) viewModel.addDate(itemId,dueDate.toString())
+        //get updated task or to do model
+        title?.let {title->
+            dueDate.let {
+                val alarmItem = AlarmItem(
+                    alarmTime = it.plusSeconds(5),
+                    message = try {
+                        "${title.substring(0..10)}..."
+                    } catch (e: StringIndexOutOfBoundsException) {
+                        title
+                    },
+                    itemId = itemId
+                )
+                // cancel previous time if any before setting new one
+                alarmItem.let(alarmScheduler::cancel)
+                alarmItem.let(alarmScheduler::schedule)
+            }
+        }?: viewModel.addDate(dueDate) // if no arguments were supplied add date temporarily on view model
+    }
 }

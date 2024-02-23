@@ -95,7 +95,7 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
     }
 
     private fun taskDetails(endDate_:String?, startDate_:String?): TaskDetails? {
-        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val now = Date()
         // function parameter can b null if they where never saved, e.i. task deadline has not been set
         return if (endDate_ != null && startDate_ != null) {

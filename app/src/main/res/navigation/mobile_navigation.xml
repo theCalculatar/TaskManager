@@ -9,13 +9,22 @@
         android:id="@+id/navigation_home"
         android:name="com.example.taskmanager.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_task"
         android:name="com.example.taskmanager.ui.tasks.TodosFragment"
         android:label="@string/title_task"
-        tools:layout="@layout/fragment_task" />
+
+        tools:layout="@layout/fragment_task" >
+        <action
+            android:id="@+id/action_navigation_task_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/navigation_home"/>
+    </fragment>
 
 
 </navigation>

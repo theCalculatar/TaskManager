@@ -8,19 +8,27 @@ import com.example.taskmanager.Constants
 import com.example.taskmanager.database.AppDatabase
 import com.example.taskmanager.models.TaskModel
 import com.example.taskmanager.models.TodoModel
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.Date
+import java.util.Locale
 
 class TaskViewModel(application: Application): AndroidViewModel(application) {
-
     private var appDatabase :AppDatabase
-    val crudTodo = MutableLiveData<CrudTodo>()
-
     init {
         appDatabase = AppDatabase.getDatabase(application)!!
     }
 
+    private val _date = MutableLiveData<LocalDateTime?>()
     private val  _todos = MutableLiveData<List<TodoModel>>().apply {
         value = appDatabase.todoManagerDao().getAllToDos()
     }
+
+    val date: LiveData<LocalDateTime?> = _date
+    val crudTodo = MutableLiveData<CrudTodo>()
+    val todos: LiveData<List<TodoModel>> = _todos
+    val allTask:LiveData<List<TaskModel>> = appDatabase.taskManagerDao().getAllTasks()
+
     fun addTask(task: TaskModel) {
         appDatabase.taskManagerDao().insertTask(task)
     }
@@ -30,19 +38,36 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         mutableTodos.postValue(appDatabase.todoManagerDao().getToDos(taskId))
         return mutableTodos
     }
-    fun getTodo(todoId: String): MutableLiveData<TodoModel> {
 
+    fun getTodo(todoId: String): MutableLiveData<TodoModel> {
         val mutableLiveData = MutableLiveData<TodoModel>()
         mutableLiveData.postValue(appDatabase.todoManagerDao().getToDo(todoId))
         return mutableLiveData
     }
 
 
-        fun getTask(taskId: Long):LiveData<TaskModel> = appDatabase.taskManagerDao().getTask(taskId)
+    fun getTask(taskId: Long):LiveData<TaskModel> = appDatabase.taskManagerDao().getTask(taskId)
 
-    fun addDates(taskId: Long,startDate: String,endDate: String){
-        appDatabase.taskManagerDao().updateDate(taskId, startDate, endDate)
+    /**
+     * Update task date
+     * @param taskId  taskID of type long
+     * @param dueDate  due date of type Date().toString()
+     */
+    fun addDate(taskId: Long, dueDate: String){
+        val now = Date()
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val startDate = formatter.format(now)
+        appDatabase.taskManagerDao().updateDate(taskId, startDate.toString(), dueDate)
     }
+
+    /**
+     * Add date Locally to communicate two fragments
+     * @param dueDate  due date of type Date().toString()
+     */
+    fun addDate(dueDate: LocalDateTime){
+        _date.postValue(dueDate)
+    }
+
 
     fun updateTitle(taskId: Long, title: String){
         appDatabase.taskManagerDao().updateTitle(taskId,title)
@@ -51,10 +76,6 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
     fun updateDescription(taskId: Long, title: String){
         appDatabase.taskManagerDao().updateDescription(taskId,title)
     }
-
-
-    val todos: LiveData<List<TodoModel>> = _todos
-    val allTask:LiveData<List<TaskModel>> = appDatabase.taskManagerDao().getAllTasks()
 
     fun todoComplete(todoId: String, complete: Boolean) {
         appDatabase.todoManagerDao().updateTodo(todoId,complete)
@@ -77,7 +98,6 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         crudTodo.postValue(CrudTodo(position,Constants.TODO_UPDATE,todo))
         appDatabase.todoManagerDao().updateTodo(todo)
     }
-
 
     class CrudTodo(
         val position: Int?,
