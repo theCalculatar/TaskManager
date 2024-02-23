@@ -35,7 +35,7 @@ class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<
         holder.checkBox.isChecked = todo.complete
 
         // no need to show due date if to-do has been done, lol
-        if (todo.complete){
+        if (todo.complete || todo.dueDate==null){
             holder.dueDate.isVisible = false
         }else{
             holder.dueDate.isVisible = true
@@ -43,9 +43,12 @@ class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<
                 holder.dueDate.text = it
             }
         }
-        todo.description.also {
+
+        todo.description?.also {
             holder.description.text = it
-        }
+            holder.description.isVisible = true
+        }?: (run{holder.description.isVisible = false})
+
         holder.checkBox.setOnCheckedChangeListener { _, _ ->
             todo.complete = !todo.complete
             onCheck?.invoke(position,todos[position])

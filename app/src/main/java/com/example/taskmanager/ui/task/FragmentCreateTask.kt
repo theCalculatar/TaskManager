@@ -55,6 +55,11 @@ class FragmentCreateTask: BottomSheetDialogFragment() {
             }
         }
         createTask.setOnClickListener {
+            val descriptionTxt = if(description.text.isNullOrEmpty()) {
+                null
+            }else{
+                description.text.toString()
+            }
             if (title.text.isEmpty()){
                 title.error = getString(R.string.non_empty_field)
                 Toast.makeText(requireContext(),getString(R.string.fill_all_required_fields),Toast.LENGTH_SHORT)
@@ -63,7 +68,7 @@ class FragmentCreateTask: BottomSheetDialogFragment() {
             }
             //add to local database
             viewModel.addTask(TaskModel(null,title.text.toString(),
-                Constants.TASK_STATUS_STARTED,description.text.toString(),null,null,priority))
+                Constants.TASK_STATUS_STARTED,descriptionTxt,null,null,priority))
             dismiss()
         }
         // spinner adapter

@@ -159,7 +159,7 @@ class TaskDetailsActivity : AppCompatActivity() {
             }
         }
     }
-    private fun dateTime(date:String):LocalDateTime{
+    fun dateTime(date:String):LocalDateTime{
         val dateParts = date.split("-")
         val timeParts = dateParts[2].split("T")[1].split(":")
 

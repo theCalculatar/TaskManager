@@ -57,6 +57,7 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         val now = Date()
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val startDate = formatter.format(now)
+        _date.postValue(null)
         appDatabase.taskManagerDao().updateDate(taskId, startDate.toString(), dueDate)
     }
 
@@ -82,9 +83,11 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
     }
 
     /**
-     * CRUD to-do model
+     * CRUD to-do model,
+     * this function gives model and instructions
      */
     fun addTodo(todo: TodoModel){
+        _date.value = null
         crudTodo.postValue(CrudTodo(null,Constants.TODO_ADD,todo))
         appDatabase.todoManagerDao().insertTodo(todo)
     }
@@ -95,6 +98,7 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun updateTodo(todo: TodoModel, position: Int){
+        _date.value = null
         crudTodo.postValue(CrudTodo(position,Constants.TODO_UPDATE,todo))
         appDatabase.todoManagerDao().updateTodo(todo)
     }

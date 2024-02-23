@@ -20,7 +20,7 @@
             android:id="@+id/priority_layout"
             android:layout_alignParentTop="true"
             android:layout_alignBottom="@id/lay..."
-            android:background="@color/teal_200"
+            android:background="@color/blue"
             />
 
         <LinearLayout
@@ -30,17 +30,39 @@
             android:orientation="vertical"
             android:id="@+id/lay..."
             >
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/title"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                />
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    app:cardCornerRadius="50dp"
+                    app:cardElevation="0dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/options_task"
+                        app:tint="?colorControlNormal"
+                        android:src="@drawable/meatballs_menu"
+                        />
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/description"
+                android:visibility="gone"
                 />
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -50,6 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/number_days"
+                    android:visibility="gone"
                     android:layout_alignParentStart="true"
                     android:layout_marginTop="@dimen/layout_vertical_margin"
                     />
@@ -59,6 +82,7 @@
                     android:layout_alignParentEnd="true"
                     android:id="@+id/days_remaining"
                     android:layout_marginTop="@dimen/layout_vertical_margin"
+                    android:visibility="gone"
                     />
             </RelativeLayout>
 

@@ -70,24 +70,28 @@ class TimePickerFragment : DialogFragment(),
         val viewModel = ViewModelProvider(requireActivity()).get(TaskViewModel::class.java)
         val dueDate = LocalDateTime.of(year, month, dayOfMonth,hourOfDay,minute)
 
-        //update Database only if item is task
-        if (itemId>0) viewModel.addDate(itemId,dueDate.toString())
+
         //get updated task or to do model
         title?.let {title->
-            dueDate.let {
-                val alarmItem = AlarmItem(
-                    alarmTime = it.plusSeconds(5),
-                    message = try {
-                        "${title.substring(0..10)}..."
-                    } catch (e: StringIndexOutOfBoundsException) {
-                        title
-                    },
-                    itemId = itemId
-                )
-                // cancel previous time if any before setting new one
-                alarmItem.let(alarmScheduler::cancel)
-                alarmItem.let(alarmScheduler::schedule)
-            }
-        }?: viewModel.addDate(dueDate) // if no arguments were supplied add date temporarily on view model
+            //update Database only if item is task
+            if (itemId>0) {
+                viewModel.addDate(itemId,dueDate.toString())
+                dueDate.let {
+                    val alarmItem = AlarmItem(
+                        alarmTime = it.plusSeconds(5),
+                        message = try {
+                            "${title.substring(0..10)}..."
+                        } catch (e: StringIndexOutOfBoundsException) {
+                            title
+                        },
+                        itemId = itemId
+                    )
+                    // cancel previous time if any before setting new one
+                    alarmItem.let(alarmScheduler::cancel)
+                    alarmItem.let(alarmScheduler::schedule)
+                }
+            } else viewModel.addDate(dueDate)
+        }?:viewModel.addDate(dueDate)// if no arguments were supplied add date temporarily on view model
+
     }
 }

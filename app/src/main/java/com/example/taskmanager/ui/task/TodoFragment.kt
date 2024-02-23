@@ -3,6 +3,7 @@ package com.example.taskmanager.ui.task
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +42,7 @@ class TodoFragment:BottomSheetDialogFragment() {
         val title = view.findViewById<EditText>(R.id.title)
         val description = view.findViewById<EditText>(R.id.description)
         val save = view.findViewById<TextView>(R.id.save)
+        val date = view.findViewById<TextView>(R.id.date)
         val setDueDate = view.findViewById<ImageView>(R.id.alert)
         val delete = view.findViewById<ImageView>(R.id.delete_todo)
         val taskSpinner = view.findViewById<Spinner>(R.id.task_spinner)
@@ -77,20 +79,35 @@ class TodoFragment:BottomSheetDialogFragment() {
                 // pre fill Edittext
                 title.setText(model.title, TextView.BufferType.EDITABLE)
                 description.setText(model.description, TextView.BufferType.EDITABLE)
-                dueDate = model.dueDate
+                model.dueDate?.let { date_->
+                    dueDate = date_
+                    TaskDetailsActivity().dateTime(date_).let {time->
+                        "${time.dayOfMonth} ${time.month} ${time.year}".also {
+                            date.text = it
+                        }
+                    }
+                }
+
                 //pass to do id as hashcode
                 val todoHash = abs(todoId.hashCode()).toLong()
                 bundle = bundleOf("itemId" to -todoHash,
                     "title" to model.title)
 
             }
-        }?: (run {
+        }
+        run {
             //this block will run if to-do is new or just created
-            viewModel.date.observe(requireActivity()){
-                dueDate = it.toString()
-                localeDateTime = it
+            viewModel.date.observe(viewLifecycleOwner){time->
+                time?.let {
+                    localeDateTime = time
+                    dueDate = it.toString()
+
+                    "${time.dayOfMonth} ${time.month} ${time.year}".also {
+                    date.text = it
+                    }
+                }
             }
-        })
+        }
 
         setDueDate.setOnClickListener {
             val datePicker = DatePickerFragment()
@@ -108,9 +125,11 @@ class TodoFragment:BottomSheetDialogFragment() {
                 override fun onItemSelected(
                     parent: AdapterView<*>?, view: View?, position: Int, id: Long
                 ) {
-                    taskId = if (position == 1) {
+                    taskId = if (position == 0) {
                         null
-                    } else (position - 1).toLong()
+                    } else{
+                        it[position-1].id!!
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -130,11 +149,13 @@ class TodoFragment:BottomSheetDialogFragment() {
             // cancel alarm on delete
             AlarmItem(null,null, -abs(todoId.hashCode().toLong()))
                 .let(alarmScheduler::cancel)
-
             dismiss()
         }
 
         save.setOnClickListener {
+            val descriptionTxt = if (description.text.isEmpty()){
+                null
+            }else description.text.toString()
             if (title.text.isEmpty()){
                 title.error = getString(R.string.non_empty_field)
                 Toast.makeText(requireContext(),getString(R.string.fill_all_required_fields), Toast.LENGTH_SHORT)
@@ -145,12 +166,27 @@ class TodoFragment:BottomSheetDialogFragment() {
             //add to local database or updating depending on whether to-do was passed
             if (todoId!=null){
                 val todo = TodoModel(todoId!!,taskId,title.text.toString(),
-                    description.text.toString(),false,dueDate)
+                    descriptionTxt,false, dueDate)
                 viewModel.updateTodo(todo,position!!)
+                // schedule new alarm
+                localeDateTime?.let {
+                    val alarmItem = AlarmItem(
+                        alarmTime = it.plusSeconds(5),
+                        message = try {
+                            "${title.text.toString().substring(0..10)}..."
+                        } catch (e: StringIndexOutOfBoundsException) {
+                            title.text.toString()
+                        },
+                        itemId = -abs(todo.hashCode()).toLong()
+                    )
+                    alarmItem.let(alarmScheduler::cancel)
+                    alarmItem.let(alarmScheduler::schedule)
+                }
+
             }else{
                 todoId = java.util.UUID.randomUUID().toString().substring(0..6)
                 val todo = TodoModel(todoId!!,taskId,title.text.toString(),
-                    description.text.toString(),false,dueDate)
+                    descriptionTxt,false, dueDate)
                 viewModel.addTodo(todo)
 
                 // schedule new alarm

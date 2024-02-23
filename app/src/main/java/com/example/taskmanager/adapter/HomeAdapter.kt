@@ -4,9 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.Constants
 import com.example.taskmanager.R
@@ -35,46 +37,57 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
         task.title.also {
             holder.title.text = it
         }
-        task.description.also {
-            holder.description.text = it
-        }
 
-        task.dueDate.also {
+        task.description?.also {
+            holder.description.isVisible = true
+            holder.description.text = it
+        }?: (run{
+            holder.description.isVisible = false
+        })
+
+        task.dueDate?.also {
             holder.days.text = it
         }
+
         //days can be null if the project deadline has not been set
         if (days!=null) {
+            //
+            holder.progress.isVisible = true
+            holder.daysLeft.isVisible =true
+            holder.days.isVisible =true
+            //
             val remainingDays = days.remainingDays
             val overallDays = days.overallDays
             val onGoingDays:Long = days.onGoingDays
-
+            //
             "${onGoingDays}/${overallDays}".also {
                 holder.days.text = it
             }
-            holder.priorityLayout.setBackgroundColor(getColor(context, R.color.yellow_500))
 
             holder.daysLeft.text = if (task.status==Constants.TASK_STATUS_COMPLETE){
                 holder.priorityLayout.setBackgroundColor(getColor(context, R.color.green_500))
                 "Completed!"
-            }
-            else if (days.isOverDue){
+            }else if (days.isOverDue){
                 holder.priorityLayout.setBackgroundColor(getColor(context, R.color.red_500))
                 "Overdue!"
-            }else if (remainingDays<1) {
+            }else if (remainingDays<1L) {
+                holder.priorityLayout.setBackgroundColor(getColor(context, R.color.red_500))
                 "Final day!"
             }else if (remainingDays==1L) {
+                holder.priorityLayout.setBackgroundColor(getColor(context, R.color.red_500))
                 "$remainingDays Day left"
             }
             else {
+                holder.priorityLayout.setBackgroundColor(getColor(context, R.color.yellow_500))
                 "$remainingDays Days left"
             }
 
-            // no need to throw exception because values from database are absolute
             holder.progress.also {
-                it.progress = onGoingDays.toInt()
-                it.max = overallDays.toInt()
+                it.progress = onGoingDays.toInt()+1
+                it.max = overallDays.toInt()+1
             }
         }
+
     }
     override fun getItemCount() =  tasks.size
 
@@ -83,6 +96,7 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
 
         val title:TextView = itemView.findViewById(R.id.title)
         val description:TextView = itemView.findViewById(R.id.description)
+        val options:ImageView = itemView.findViewById(R.id.options_task)
         val priorityLayout:View = itemView.findViewById(R.id.priority_layout)
         val days:TextView = itemView.findViewById(R.id.number_days)
         val daysLeft:TextView = itemView.findViewById(R.id.days_remaining)
@@ -97,7 +111,7 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
     private fun taskDetails(endDate_:String?, startDate_:String?): TaskDetails? {
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val now = Date()
-        // function parameter can b null if they where never saved, e.i. task deadline has not been set
+        // function parameter can be null if they where never saved, e.i. task deadline has not been set
         return if (endDate_ != null && startDate_ != null) {
             try {
                 val currentDate = formatter.parse(formatter.format(now))

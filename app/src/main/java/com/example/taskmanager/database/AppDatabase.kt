@@ -8,7 +8,7 @@ import com.example.taskmanager.models.TaskModel
 import com.example.taskmanager.models.TodoModel
 
 @Database(entities =
-[TaskModel::class,TodoModel::class], exportSchema = false, version = 3,)
+[TaskModel::class,TodoModel::class], exportSchema = false, version = 2,)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskManagerDao(): TaskDao
     abstract fun todoManagerDao(): TodoDao
