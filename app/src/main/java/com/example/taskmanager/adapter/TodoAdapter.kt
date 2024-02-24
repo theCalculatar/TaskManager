@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.forEach
@@ -13,6 +14,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.R
 import com.example.taskmanager.models.TodoModel
+import com.example.taskmanager.ui.task.TaskDetailsActivity
 
 class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
     var onCheck: ((position: Int, model: TodoModel) -> Unit)? = null
@@ -36,11 +38,15 @@ class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<
 
         // no need to show due date if to-do has been done, lol
         if (todo.complete || todo.dueDate==null){
-            holder.dueDate.isVisible = false
-        }else{
-            holder.dueDate.isVisible = true
+            holder.lay.isVisible = false
+        }else {
+            holder.lay.isVisible = true
             todo.dueDate.also {
-                holder.dueDate.text = it
+                TaskDetailsActivity().dateTime(it).let { date ->
+                    holder.day.text = "${date.dayOfMonth}"
+                    holder.month.text = "${date.month}".substring(0..2)
+                    holder.year.text = "${date.year}"
+                }
             }
         }
 
@@ -60,8 +66,11 @@ class TodoAdapter(private val todos:ArrayList<TodoModel>): RecyclerView.Adapter<
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         val title:TextView = itemView.findViewById(R.id.title)
         val description:TextView = itemView.findViewById(R.id.description)
-        val dueDate:TextView = itemView.findViewById(R.id.due_date)
+        val day:TextView = itemView.findViewById(R.id.day)
+        val month:TextView = itemView.findViewById(R.id.month)
+        val year:TextView = itemView.findViewById(R.id.year)
         val checkBox:CheckBox = itemView.findViewById(R.id.checkbox)
+        val lay:LinearLayout = itemView.findViewById(R.id.lay)
         init {
             //initialize items with context menu
             itemView.setOnCreateContextMenuListener { menu, _, _ ->
