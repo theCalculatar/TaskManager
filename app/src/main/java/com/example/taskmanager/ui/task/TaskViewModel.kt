@@ -103,6 +103,15 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         appDatabase.todoManagerDao().updateTodo(todo)
     }
 
+    fun updateTask(model: TaskModel) {
+        appDatabase.taskManagerDao().updateTask(model)
+    }
+
+    fun deleteTask(taskId:Long){
+        appDatabase.taskManagerDao().deleteTask(taskId)
+        appDatabase.todoManagerDao().deleteTodos(taskId)
+    }
+
     class CrudTodo(
         val position: Int?,
         val action:Int,

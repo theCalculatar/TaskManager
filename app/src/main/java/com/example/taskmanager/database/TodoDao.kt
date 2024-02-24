@@ -41,5 +41,7 @@ interface TodoDao {
      */
     @Update
     fun updateTodo(todo: TodoModel)
+    @Query("DELETE FROM todo WHERE `taskId`=:taskId")
+    fun deleteTodos(taskId: Long)
 
 }

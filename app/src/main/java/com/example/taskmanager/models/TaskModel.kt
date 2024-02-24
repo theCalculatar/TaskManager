@@ -11,7 +11,7 @@ class TaskModel(
     @ColumnInfo("title")
     val title: String,
     @ColumnInfo("status")
-    val status: String,
+    var status: String,
     @ColumnInfo("description")
     val description: String?,
     @ColumnInfo("start date")

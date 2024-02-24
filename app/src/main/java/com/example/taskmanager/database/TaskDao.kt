@@ -33,6 +33,9 @@ interface TaskDao {
     @Query("UPDATE task SET title=:title, description=:description,`priority`=:priority WHERE id = :taskId")
     fun updateTask(taskId:Long, title:String, description:String, priority: String)
 
+    @Update
+    fun updateTask(task: TaskModel)
+
 
 
 }

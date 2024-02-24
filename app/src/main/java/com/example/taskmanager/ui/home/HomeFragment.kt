@@ -5,14 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.taskmanager.Constants
+import com.example.taskmanager.R
 import com.example.taskmanager.adapter.HomeAdapter
 import com.example.taskmanager.databinding.FragmentHomeBinding
 import com.example.taskmanager.models.TaskModel
+import com.example.taskmanager.ui.alarmManager.AlarmItem
+import com.example.taskmanager.ui.alarmManager.AlarmScheduler
+import com.example.taskmanager.ui.alarmManager.AlarmSchedulerImpl
 import com.example.taskmanager.ui.task.FragmentCreateTask
 import com.example.taskmanager.ui.task.TaskDetailsActivity
 
@@ -23,6 +27,8 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var alarmScheduler: AlarmScheduler
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,8 +41,11 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val recyclerView = binding.taskRecyclerView
+        //
+        alarmScheduler = AlarmSchedulerImpl(requireActivity())
+        //
 
+        val recyclerView = binding.taskRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
@@ -48,6 +57,28 @@ class HomeFragment : Fragment() {
                 val taskIntent = Intent(requireContext(),TaskDetailsActivity::class.java)
                 taskIntent.putExtra("taskId",taskId)
                 startActivity(taskIntent)// launch activity passing taskId
+            }
+            adapter.onItemLongClick = { menuId,_,model->
+                when(menuId){
+                    R.id.delete->{
+                        homeViewModel.deleteTask(model.id!!)
+                        // cancel alarm on delete
+                        AlarmItem(null,null, model.id)
+                            .let(alarmScheduler::cancel)
+                    }
+                    R.id.mark_complete-> {
+                        model.status = when(model.status) {
+                            Constants.TASK_STATUS_COMPLETE -> Constants.TASK_STATUS_IN_PROGRESS
+                            else-> Constants.TASK_STATUS_COMPLETE
+                        }
+                        homeViewModel.markComplete(model)
+                    }
+                    R.id.update->{
+                        val fragmentCreateTask = FragmentCreateTask()
+                        fragmentCreateTask.arguments = bundleOf("taskId" to model.id)
+                        fragmentCreateTask.show(childFragmentManager,fragmentCreateTask.tag)
+                    }
+                }
             }
         }
         return root

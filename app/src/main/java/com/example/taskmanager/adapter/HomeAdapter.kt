@@ -1,18 +1,31 @@
 package com.example.taskmanager.adapter
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.PorterDuff
+import android.os.Build
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
+import androidx.core.content.ContextCompat.getDrawable
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.Constants
 import com.example.taskmanager.R
 import com.example.taskmanager.models.TaskModel
+import com.example.taskmanager.models.TodoModel
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -22,6 +35,7 @@ import kotlin.math.abs
 
 class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
     var onclick: ((Long) -> Unit)? = null
+    var onItemLongClick: ((menuId:Int, position:Int, todo: TaskModel) -> Unit)? = null
 
     private lateinit var context:Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,6 +44,7 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
         return ViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onBindViewHolder(holder: HomeAdapter.ViewHolder, position: Int) {
         val task = tasks[position]
         val days = taskDetails(task.dueDate,task.startDate)
@@ -49,6 +64,9 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
             holder.days.text = it
         }
 
+        holder.priorityLayout.setBackgroundColor(
+            getColor(holder.itemView.context, getPriorityColor(priority = task.priority!!)))
+
         //days can be null if the project deadline has not been set
         if (days!=null) {
             //
@@ -65,20 +83,25 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
             }
 
             holder.daysLeft.text = if (task.status==Constants.TASK_STATUS_COMPLETE){
-                holder.priorityLayout.setBackgroundColor(getColor(context, R.color.green_500))
+                holder.days.background = getDrawable(context,R.drawable.gradient_green)
+                holder.progress.progressTintList = ColorStateList.valueOf(getColor(context, R.color.green_500))
                 "Completed!"
             }else if (days.isOverDue){
-                holder.priorityLayout.setBackgroundColor(getColor(context, R.color.red_500))
+                holder.days.background = getDrawable(context,R.drawable.gradient_red)
+                holder.progress.progressTintList = ColorStateList.valueOf(getColor(context, R.color.light_red))
                 "Overdue!"
             }else if (remainingDays<1L) {
-                holder.priorityLayout.setBackgroundColor(getColor(context, R.color.red_500))
+                holder.days.background = getDrawable(context,R.drawable.gradient_red)
+                holder.progress.progressTintList = ColorStateList.valueOf(getColor(context, R.color.light_red))
                 "Final day!"
             }else if (remainingDays==1L) {
-                holder.priorityLayout.setBackgroundColor(getColor(context, R.color.red_500))
+                holder.days.background = getDrawable(context,R.drawable.gradient_blue)
+                holder.progress.progressTintList = ColorStateList.valueOf(getColor(context, R.color.light_blue))
                 "$remainingDays Day left"
             }
             else {
-                holder.priorityLayout.setBackgroundColor(getColor(context, R.color.yellow_500))
+                holder.days.background = getDrawable(context,R.drawable.gradient_green)
+                holder.progress.progressTintList = ColorStateList.valueOf(getColor(context, R.color.light_green))//                holder.progress.horizontalScrollbarTrackDrawable = (getDrawable(context, R.drawable.gradient_green))
                 "$remainingDays Days left"
             }
 
@@ -96,7 +119,7 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
 
         val title:TextView = itemView.findViewById(R.id.title)
         val description:TextView = itemView.findViewById(R.id.description)
-        val options:ImageView = itemView.findViewById(R.id.options_task)
+        private val options:ImageView = itemView.findViewById(R.id.options_task)
         val priorityLayout:View = itemView.findViewById(R.id.priority_layout)
         val days:TextView = itemView.findViewById(R.id.number_days)
         val daysLeft:TextView = itemView.findViewById(R.id.days_remaining)
@@ -104,6 +127,17 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
         init {
             itemView.setOnClickListener {
                 onclick?.invoke(tasks[adapterPosition].id!!)
+            }
+            //initialize items with context menu
+            options.setOnClickListener {
+                val menu = PopupMenu(it.context,it)
+                menu.inflate(R.menu.long_click_menu)
+                menu.setOnMenuItemClickListener {menuItem->
+                        onItemLongClick?.invoke(menuItem.itemId, adapterPosition, tasks[adapterPosition])
+                        false
+                    }
+                menu.show()
+
             }
         }
     }
@@ -144,6 +178,14 @@ class HomeAdapter(private val tasks:ArrayList<TaskModel>): RecyclerView.Adapter<
         }
     }
 
+    private fun getPriorityColor(priority: String):Int{
+        val priorityArray = context.resources.getStringArray(R.array.priority)
+        return when(priority){
+            priorityArray[0]->R.color.green_500
+            priorityArray[1]->R.color.yellow_500
+            else->R.color.red_500
+        }
+    }
 
     class TaskDetails(val remainingDays: Long, val overallDays: Long,
                       val onGoingDays:Long, val isOverDue:Boolean)

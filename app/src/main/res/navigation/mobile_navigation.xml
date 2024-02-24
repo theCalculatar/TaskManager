@@ -16,7 +16,7 @@
     <fragment
         android:id="@+id/navigation_task"
         android:name="com.example.taskmanager.ui.tasks.TodosFragment"
-        android:label="@string/title_task"
+        android:label="@string/title_todo"
 
         tools:layout="@layout/fragment_task" >
         <action
