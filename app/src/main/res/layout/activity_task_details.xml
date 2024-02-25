@@ -32,7 +32,6 @@
                     android:background="@null"
                     android:id="@+id/title"
                     app:layout_collapseMode="pin"
-
                     android:autofillHints=""
                     android:hint="@string/title"
                     android:imeOptions="actionNext"

@@ -31,7 +31,7 @@ class TodosFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var alarmScheduler: AlarmScheduler
-    private val viewModel: TaskViewModel by viewModels()
+    private val viewModel: TaskViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

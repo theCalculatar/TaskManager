@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import java.time.ZoneId
 
 class AlarmSchedulerImpl(
@@ -15,6 +16,7 @@ class AlarmSchedulerImpl(
     override fun schedule(alarmItem: AlarmItem) {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("EXTRA_MESSAGE", alarmItem.message)
+            putExtra("itemId",alarmItem.itemId)
             putExtra("CHANEL_ID", if (alarmItem.itemId>0){
                 "TASK_ID"
             }else {

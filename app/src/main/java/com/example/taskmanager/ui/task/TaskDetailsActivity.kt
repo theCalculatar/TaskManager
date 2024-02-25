@@ -1,6 +1,7 @@
 package com.example.taskmanager.ui.task
 
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils.substring
@@ -15,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager.Constants
+import com.example.taskmanager.MainActivity
 import com.example.taskmanager.R
 import com.example.taskmanager.adapter.TodoAdapter
 import com.example.taskmanager.models.TodoModel
@@ -27,6 +29,7 @@ import kotlin.collections.ArrayList
 class TaskDetailsActivity : AppCompatActivity() {
 
     private lateinit var viewModel: TaskViewModel
+    private var fromReceiver = false
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this)[TaskViewModel::class.java]
         super.onCreate(savedInstanceState)
@@ -40,8 +43,10 @@ class TaskDetailsActivity : AppCompatActivity() {
         val items = findViewById<TextView>(R.id.item_count)
         val todoRecycler = findViewById<RecyclerView>(R.id.to_do_recycler)
 
-        // From homepage
+        // From homepage or receiver
         val taskId = intent.getLongExtra("taskId", -1)
+        fromReceiver = intent.getBooleanExtra("fromReceiver",false)
+        if (taskId ==-1L) finish()
         //
         var alarmItem: AlarmItem?
 
@@ -70,7 +75,6 @@ class TaskDetailsActivity : AppCompatActivity() {
                 datePicker.arguments = bundleOf("itemId" to taskId, "title" to taskModel.title)
                 datePicker.show(supportFragmentManager, "DatePicker")
             }
-
         }
 
         // uses watcher to update title
@@ -172,5 +176,15 @@ class TaskDetailsActivity : AppCompatActivity() {
 
         return LocalDateTime.of(year,month,dayOfMonth, hour, minute)
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (fromReceiver){
+            val intent = Intent(this,MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
 }
 

@@ -39,13 +39,6 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // react on change
-            // you can check destination.id or destination.label and act based on that
-//            when(destination.id ==R.id.navigation_home){
-//                true->{
-////                    navController.popBackStack(R.id.navigation_task,true)
-//                }
-//                false->{}
-//            }
             val animation = AnimationUtils.loadAnimation(applicationContext,R.anim.shrink_amin)
             fab.startAnimation(animation)
             collapseToolbar.title = destination.label.toString()
