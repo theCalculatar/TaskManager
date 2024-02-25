@@ -20,13 +20,11 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
     }
 
     private val _date = MutableLiveData<LocalDateTime?>()
-    private val  _todos = MutableLiveData<List<TodoModel>>().apply {
-        value = appDatabase.todoManagerDao().getAllToDos()
-    }
+    private val  _todos = MutableLiveData<List<TodoModel>>()
 
     val date: LiveData<LocalDateTime?> = _date
     val crudTodo = MutableLiveData<CrudTodo>()
-    val todos: LiveData<List<TodoModel>> = _todos
+//    val todos: LiveData<List<TodoModel>> = _todos
     val allTask:LiveData<List<TaskModel>> = appDatabase.taskManagerDao().getAllTasks()
 
     fun addTask(task: TaskModel) {
@@ -45,6 +43,11 @@ class TaskViewModel(application: Application): AndroidViewModel(application) {
         return mutableLiveData
     }
 
+    fun getTodos(): LiveData<List<TodoModel>>{
+        val list = MutableLiveData<List<TodoModel>>()
+        list.postValue(appDatabase.todoManagerDao().getAllToDos())
+        return list
+    }
 
     fun getTask(taskId: Long):LiveData<TaskModel> = appDatabase.taskManagerDao().getTask(taskId)
 

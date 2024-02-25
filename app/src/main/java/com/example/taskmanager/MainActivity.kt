@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = binding.navView
         val collapseToolbar = binding.toolbarLayout
+        val fab = binding.fab
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -38,15 +40,17 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // react on change
             // you can check destination.id or destination.label and act based on that
-            when(destination.id ==R.id.navigation_home){
-                true->{
-                    navController.popBackStack(R.id.navigation_task,true)
-                }
-                false->{}
-            }
+//            when(destination.id ==R.id.navigation_home){
+//                true->{
+////                    navController.popBackStack(R.id.navigation_task,true)
+//                }
+//                false->{}
+//            }
+            val animation = AnimationUtils.loadAnimation(applicationContext,R.anim.shrink_amin)
+            fab.startAnimation(animation)
             collapseToolbar.title = destination.label.toString()
         }
-        binding.fab.setOnClickListener {
+        fab.setOnClickListener {
             when(navController.currentDestination?.id){
                 R.id.navigation_home->{
                     FragmentCreateTask().show(supportFragmentManager, FragmentCreateTask.TAG)
