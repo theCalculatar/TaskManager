@@ -48,7 +48,6 @@ class TaskDetailsActivity : AppCompatActivity() {
         fromReceiver = intent.getBooleanExtra("fromReceiver",false)
         if (taskId ==-1L) finish()
         //
-        var alarmItem: AlarmItem?
 
         var listSize = 0
         todoRecycler.layoutManager = LinearLayoutManager(this)
@@ -59,6 +58,7 @@ class TaskDetailsActivity : AppCompatActivity() {
             todoFragment.show(supportFragmentManager, TodoFragment.TAG)
         }
 
+        //get task by id
         viewModel.getTask(taskId).observe(this) { taskModel ->
             title.setText(taskModel.title, TextView.BufferType.EDITABLE)
             description.setText(taskModel.description, TextView.BufferType.EDITABLE)
@@ -111,7 +111,7 @@ class TaskDetailsActivity : AppCompatActivity() {
         todoRecycler.adapter = adapter
 
         viewModel.crudTodo.observe(this){ crudTodo->
-
+            //using live data to update recycler view smooothly
             when(crudTodo.action){
                 Constants.TODO_ADD-> {
                     todos.add(crudTodo.model!!)
@@ -180,8 +180,8 @@ class TaskDetailsActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         if (fromReceiver){
-            val intent = Intent(this,MainActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(this,MainActivity::class.java)
+//            startActivity(intent)
             finish()
         }
     }

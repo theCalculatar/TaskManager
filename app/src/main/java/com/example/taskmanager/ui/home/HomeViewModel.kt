@@ -20,7 +20,6 @@ class HomeViewModel (application: Application): AndroidViewModel(application) {
         appDatabase.todoManagerDao().deleteTodos(taskId)
     }
 
-
     fun markComplete(task:TaskModel){
         appDatabase.taskManagerDao().updateTask(task)
     }

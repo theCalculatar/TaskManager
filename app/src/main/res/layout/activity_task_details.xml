@@ -48,7 +48,7 @@
                     android:imeOptions="actionDone"
                     android:hint="@string/description"
                     android:backgroundTint="@color/grey"
-                    android:inputType="textImeMultiLine" />
+                    android:inputType="textMultiLine" />
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
