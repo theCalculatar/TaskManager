@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,9 +20,11 @@ import com.example.taskmanager.Constants
 import com.example.taskmanager.MainActivity
 import com.example.taskmanager.R
 import com.example.taskmanager.adapter.TodoAdapter
+import com.example.taskmanager.models.TaskModel
 import com.example.taskmanager.models.TodoModel
 import com.example.taskmanager.ui.alarmManager.AlarmItem
 import com.example.taskmanager.ui.pickerdate.DatePickerFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import kotlin.collections.ArrayList
@@ -41,6 +44,7 @@ class TaskDetailsActivity : AppCompatActivity() {
         val date = findViewById<TextView>(R.id.due_date)
         val addTodo = findViewById<ImageView>(R.id.add_todo)
         val items = findViewById<TextView>(R.id.item_count)
+        val save = findViewById<FloatingActionButton>(R.id.save)
         val todoRecycler = findViewById<RecyclerView>(R.id.to_do_recycler)
 
         // From homepage or receiver
@@ -75,11 +79,17 @@ class TaskDetailsActivity : AppCompatActivity() {
                 datePicker.arguments = bundleOf("itemId" to taskId, "title" to taskModel.title)
                 datePicker.show(supportFragmentManager, "DatePicker")
             }
+            save.setOnClickListener {
+                viewModel.updateTask(TaskModel(taskId,title.text.toString(),taskModel.status,
+                description.text.toString(),taskModel.startDate,taskModel.dueDate, priority = taskModel.priority))
+            }
         }
 
         // uses watcher to update title
         title.apply {
             this.afterTextChanged {
+                save.isVisible = it.isNotBlank()
+
                 this.setOnEditorActionListener { _, actionId, _ ->
                     when (actionId) {
                         EditorInfo.IME_ACTION_NEXT ->
@@ -94,17 +104,10 @@ class TaskDetailsActivity : AppCompatActivity() {
 
         // uses watcher to update description
         description.apply {
-            afterTextChanged {
-                setOnEditorActionListener { _, actionId, _ ->
-                    when (actionId) {
-                        EditorInfo.IME_ACTION_DONE ->
-                            lifecycleScope.launch{
-                                viewModel.updateDescription(taskId,it)
-                            }
-                    }
-                    false }
-            }
+            save.isVisible = true
         }
+
+
 
         val todos = ArrayList<TodoModel>(0)
         val adapter = TodoAdapter(todos)
